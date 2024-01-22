@@ -1,1 +1,1 @@
-Backend do projeto Pendurai de Gestão de Vendas e Fiados.
+Backend do projeto Pendurai de Gestão de Vendas e de Fiado.
