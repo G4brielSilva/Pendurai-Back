@@ -1,16 +1,14 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES6",
         "module": "commonjs",
         "outDir": "./dist",
         "rootDir": "./src",
         "removeComments": false,
         "resolveJsonModule": true,
-
         "strict": true,
         "strictPropertyInitialization": false,
-
         "moduleResolution": "node",
         "baseUrl": "./src",
         "allowSyntheticDefaultImports": true,
@@ -20,13 +18,27 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "paths": {
-            "@root/*": ["./src/*"],
-            "@modules/*": ["./src/modules/*"],
-            "@libray/*": ["./src/libray/*"],
-            "@models/*": ["./src/models/*"],
-            "@routes/*": ["./src/routes/*"],
-            "@utils/*": ["./src/utils/*"],
-            "@decorators/*": ["./src/decorators/*"]
+            "@root/*": [
+                "./src/*"
+            ],
+            "@modules/*": [
+                "./src/modules/*"
+            ],
+            "@libray/*": [
+                "./src/libray/*"
+            ],
+            "@models/*": [
+                "./src/models/*"
+            ],
+            "@routes/*": [
+                "./src/routes/*"
+            ],
+            "@utils/*": [
+                "./src/utils/*"
+            ],
+            "@decorators/*": [
+                "./src/decorators/*"
+            ]
         }
     },
     "exclude": [
