@@ -4,18 +4,30 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        restart: always
         env_file:
             - .env/pendurai_api.env
         volumes:
-            - ./src:/app/src
+            - .:/app
         ports:
             - "3000:3000"
+        networks:
+            - pendurai-network
         command: npm start
     pendurai-mariadb:
         image: mariadb:latest
+        restart: always
         env_file:
             - .env/mariadb.env
         ports:
             - "3306:3306"
         volumes:
-            - ./db:/var/lib/mysql
+            - mariadb_data:/var/lib/mysql
+        networks:
+            - pendurai-network
+
+networks:
+    pendurai-network:
+        driver: bridge
+volumes:
+    mariadb_data:
