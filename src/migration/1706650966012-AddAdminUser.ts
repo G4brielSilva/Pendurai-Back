@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { User } from '../entity';
+import { User } from '../library/entity';
 
 export class AddAdminAndAuthentication1706650966012 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
