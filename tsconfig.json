@@ -25,7 +25,7 @@
                 "./src/modules/*"
             ],
             "@libray/*": [
-                "./src/libray/*"
+                "./src/library/*"
             ],
             "@models/*": [
                 "./src/models/*"
