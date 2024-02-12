@@ -9,7 +9,7 @@ export const dataSource = new DataSource({
     username: 'root',
     password: process.env.MARIADB_ROOT_PASSWORD,
     database: process.env.MARIADB_DATABASE,
-    entities: ['src/entity/*.ts'],
+    entities: ['src/library/entity/*.ts'],
     migrations: ['src/migration/*.ts'],
     logging: true,
     synchronize: true
