@@ -15,6 +15,28 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
             url: '../swagger.json'
         },
         components: {
+            responses: {
+                Success200: {
+                    description: 'Sucesso',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    message: {
+                                        type: 'string',
+                                        description: 'Mensagem de sucesso'
+                                    },
+                                    data: {
+                                        type: 'object',
+                                        description: 'Dados retornados pela requisição'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             securitySchemes: {
                 BearerAuth: {
                     in: 'header',
