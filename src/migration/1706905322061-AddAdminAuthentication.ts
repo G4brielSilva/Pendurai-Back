@@ -14,7 +14,7 @@ export class AddAdminAndAuthentication1706905322061 implements MigrationInterfac
         authentication.user = user;
         authentication.admin = true;
 
-        await authentication.hashPassword();
+        // await authentication.hashPassword();
         await queryRunner.manager.insert(Authentication, authentication);
     }
 
