@@ -1,3 +1,3 @@
-export * from './Authentication.entity';
-export * from './User.entity';
+export { Authentication } from './Authentication.entity';
+export { User } from './User.entity';
 

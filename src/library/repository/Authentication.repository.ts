@@ -1,7 +1,6 @@
-// import { Repository } from 'typeorm';
 import { Repository } from 'typeorm';
 import { dataSource } from '../../config/database';
-import { Authentication } from '../entity/Authentication.entity';
+import { Authentication } from '../entity';
 
 export class AuthenticationRepository {
     repository: Repository<Authentication>;
@@ -16,5 +15,4 @@ export class AuthenticationRepository {
     }
 }
 
-// user.repository.ts
 export const UserRepository = dataSource.getRepository(Authentication);

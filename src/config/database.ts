@@ -11,6 +11,6 @@ export const dataSource = new DataSource({
     database: process.env.MARIADB_DATABASE,
     entities: ['src/library/entity/*.ts'],
     migrations: ['src/migration/*.ts'],
-    logging: true,
+    logging: false,
     synchronize: true
 });

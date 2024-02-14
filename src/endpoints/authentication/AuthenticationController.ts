@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { AuthenticationRepository } from '../../library/repository';
-import { verifyPassword } from '../../utils/Password';
+import { Password } from '../../utils/Password';
 
 const authRouter = Router();
 
@@ -32,8 +32,8 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     if (!authentication) return res.status(400).send('Credenciais Inválidas');
 
     const { password: hashedPassword, salt } = authentication;
-    if (!verifyPassword(password, hashedPassword, salt as string)) return res.status(400).send('Credenciais Inválidas');
 
+    if (!Password.verifyPassword(password, hashedPassword, salt as string)) return res.status(400).send('Credenciais Inválidas');
     return res.send('Hello World');
 });
 

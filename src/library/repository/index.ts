@@ -1,1 +1,1 @@
-export * from './Authentication.repository';
+export { AuthenticationRepository } from './Authentication.repository';
