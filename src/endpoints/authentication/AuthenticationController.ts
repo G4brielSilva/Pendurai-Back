@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { AuthenticationRepository } from '../../library/repository';
+import { JWT } from '../../third-party/Jwt';
 import { Password } from '../../utils/Password';
 
 const authRouter = Router();
@@ -31,10 +32,15 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const authentication = await new AuthenticationRepository().getHashedPassword(email);
     if (!authentication) return res.status(400).send('Credenciais Inválidas');
 
-    const { password: hashedPassword, salt } = authentication;
+    const { password: hashedPassword, salt, user, id: authId } = authentication;
 
     if (!Password.verifyPassword(password, hashedPassword, salt as string)) return res.status(400).send('Credenciais Inválidas');
-    return res.send('Hello World');
+
+    const token = JWT.generateAccessToken(user.id, authId);
+
+    console.log(JWT.decodeToken(token));
+
+    return res.send({ Authorization: `Bearer ${token}` });
 });
 
 export { authRouter };
