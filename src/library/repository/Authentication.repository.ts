@@ -11,7 +11,7 @@ export class AuthenticationRepository {
 
     public async getHashedPassword(email: string): Promise<Authentication | null> {
         if (!email) return null;
-        return this.repository.findOne({ select: ['password', 'salt'], where: { email } });
+        return this.repository.findOne({ select: ['id', 'admin', 'user', 'password', 'salt'], where: { email } });
     }
 }
 
