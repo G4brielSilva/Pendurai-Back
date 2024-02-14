@@ -38,8 +38,6 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
     const token = JWT.generateAccessToken(user.id, authId);
 
-    console.log(JWT.decodeToken(token));
-
     return res.send({ Authorization: `Bearer ${token}` });
 });
 
