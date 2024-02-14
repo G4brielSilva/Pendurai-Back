@@ -1,4 +1,6 @@
 /*.js’
+*.js
 node_modules
 dist
 index.ts
+__tests__
