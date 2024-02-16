@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Express, Router } from 'express';
 import { authRouter } from './endpoints';
 
-const routes = Router();
-
-routes.use('/', authRouter);
-
-export { routes };
+export function setupRoutes(app: Express): void {
+    const router = Router();
+    router.use('/auth', authRouter);
+    app.use('/api', router);
+}
