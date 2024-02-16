@@ -7,7 +7,7 @@ const authRouter = Router();
 
 /**
  * @swagger
- * /login:
+ * /api/auth/login:
  *   post:
  *     summary: Login de usuário
  *     description: Faz o login do usuário e retorna um token
@@ -20,8 +20,10 @@ const authRouter = Router();
  *             properties:
  *               email:
  *                 type: string
+ *                 example: 'email@email.com'
  *               password:
  *                 type: string
+ *                 example: 'password'
  *     responses:
  *       200:
  *         $ref: '#/components/responses/Success200'
