@@ -4,7 +4,7 @@
         "target": "ES6",
         "module": "commonjs",
         "outDir": "./dist",
-        "rootDir": "./src",
+        "rootDir": "./", // Alterado para o diretório que contém tanto 'src' quanto 'jest'
         "removeComments": false,
         "resolveJsonModule": true,
         "strict": true,
@@ -49,6 +49,7 @@
     ],
     "include": [
         "src/**/*",
-        "setEnvVars.ts"
-, "jest"    ]
+        "jest/setEnvVars.ts",
+        "jest"
+    ]
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import app from './config/app';
 import { dataSource } from './config/database';
 
