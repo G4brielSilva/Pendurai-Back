@@ -55,7 +55,7 @@ describe('POST /api/auth/login', () => {
         spyVerifyPassword.mockReturnValueOnce(true);
 
         const response = await request(app).post(URL).send(validLoginCredentials);
-
+        console.log(response.body);
         expect(response.status).toBe(200);
     });
 });
