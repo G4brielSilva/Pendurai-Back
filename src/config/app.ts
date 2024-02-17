@@ -1,7 +1,7 @@
 import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { setupRoutes } from '../routes';
+import { setupRoutes } from './routes';
 import { swaggerConfig } from './swagger';
 
 const app = express();
