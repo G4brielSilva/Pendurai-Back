@@ -19,39 +19,53 @@ const app = new App({
     middlewares: [],
     controllers: [...v1]
 }).app;
+describe('AuthenticationController', () => {
+    describe('POST - login', () => {
+        const URL = '/api/auth/login';
 
-describe('POST /api/auth/login', () => {
-    const URL = '/api/auth/login';
+        const validLoginCredentials = {
+            email: 'valid_email@email.com',
+            password: 'valid_password'
+        }
 
-    const validLoginCredentials = {
-        email: 'valid_email@email.com',
-        password: 'valid_password'
-    }
+        const spyVerifyPassword = jest.spyOn(Password, 'verifyPassword');
 
-    const spyVerifyPassword = jest.spyOn(Password, 'verifyPassword');
+        it('should return 400 if an invalid email was provided', async () => {
+            const response = await request(app).post(URL).send({
+                ...validLoginCredentials,
+                email: 'invalid_email@email.com'
+            });
 
-    it('should return 400 if an invalid email was provided', async () => {
-        const response = await request(app).post(URL).send({
-            ...validLoginCredentials,
-            email: 'invalid_email@email.com'
+            expect(response.status).toBe(400);
         });
 
-        expect(response.status).toBe(400);
-    });
+        it('should return 400 if an invalid password was provided', async () => {
+            const response = await request(app).post(URL).send({
+                ...validLoginCredentials,
+                password: 'invalid_password'
+            });
 
-    it('should return 400 if an invalid password was provided', async () => {
-        const response = await request(app).post(URL).send({
-            ...validLoginCredentials,
-            password: 'invalid_password'
+            expect(response.status).toBe(400);
         });
 
-        expect(response.status).toBe(400);
-    });
+        it('should return 400 if a login is tried to a deleted User', async () => {
+            spyVerifyPassword.mockReturnValueOnce(true);
 
-    it('should return 200 if valid email and password was provided', async () => {
-        spyVerifyPassword.mockReturnValueOnce(true);
+            const response = await request(app).post(URL).send({
+                email: 'deleted_user_email@email.com',
+                password: 'an_valid_password'
+            });
 
-        const response = await request(app).post(URL).send(validLoginCredentials);
-        expect(response.status).toBe(200);
+            console.log(response.body);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 200 if valid email and password was provided', async () => {
+            spyVerifyPassword.mockReturnValueOnce(true);
+
+            const response = await request(app).post(URL).send(validLoginCredentials);
+            expect(response.status).toBe(200);
+        });
     });
 });
