@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { BaseController } from '../../common/models/BaseController';
-import { RouteResponse } from '../../common/models/RouteResponse';
-import { Controller } from '../../decorators/Contoller';
-import { Middlewares } from '../../decorators/Middlewares';
-import { POST } from '../../decorators/methods';
-import { AuthenticationRepository } from '../../library/repository';
-import { JWT } from '../../third-party/Jwt';
-import { Password } from '../../utils/Password';
+import { BaseController } from '../../../common/models/BaseController';
+import { RouteResponse } from '../../../common/models/RouteResponse';
+import { Controller } from '../../../decorators/Contoller';
+import { Middlewares } from '../../../decorators/Middlewares';
+import { POST } from '../../../decorators/methods';
+import { AuthenticationRepository } from '../../../library/repository';
+import { JWT } from '../../../third-party/Jwt';
+import { Password } from '../../../utils/Password';
 import { AuthenticationValidator } from './Authentication.validator';
 
 @Controller('/auth')

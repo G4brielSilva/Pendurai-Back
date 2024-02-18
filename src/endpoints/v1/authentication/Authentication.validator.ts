@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 // import { RouteResponse } from '../../common/models/RouteResponse';
-import { BaseValidator } from '../../common/models/BaseValidator';
+import { BaseValidator } from '../../../common/models/BaseValidator';
 
 export class AuthenticationValidator extends BaseValidator {
     public static login(): Array<RequestHandler> {

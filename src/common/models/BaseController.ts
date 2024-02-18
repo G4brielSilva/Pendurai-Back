@@ -1,3 +1,3 @@
 export class BaseController {
-    baseRoute: string;
+    public baseRoute: string;
 }

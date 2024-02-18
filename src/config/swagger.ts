@@ -8,7 +8,7 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
             description: 'Endpoints do projeto Penduraí.',
             version: '1.1.0'
         },
-        host: 'localhost:3000',
+        host: 'localhost:8080',
         tags: [],
         externalDocs: {
             description: 'View swagger.json',

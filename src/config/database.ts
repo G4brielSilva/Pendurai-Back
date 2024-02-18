@@ -10,7 +10,7 @@ export const dataSource = new DataSource({
     password: process.env.MARIADB_ROOT_PASSWORD,
     database: process.env.MARIADB_DATABASE,
     entities: ['src/library/entity/*.ts'],
-    migrations: ['src/migration/*.ts'],
+    migrations: ['./migrations/*.ts'],
     logging: false,
     synchronize: true
 });

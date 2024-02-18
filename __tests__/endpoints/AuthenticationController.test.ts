@@ -1,6 +1,6 @@
-import { Server } from 'http';
 import request from 'supertest';
-import app from '../../src/config/app';
+import { App } from '../../src/config/App';
+import { v1 } from '../../src/endpoints/v1';
 import { Password } from '../../src/utils/Password';
 
 // Authentication repository mock
@@ -13,15 +13,12 @@ jest.mock('../../src/third-party/Jwt', () => {
     return jest.requireActual('../../__mocks__/third-party/Jwt');
 });
 
-let server: Server;
-
-beforeAll(async () => {
-    server = app.listen(3000);
-});
-
-afterAll(async () => {
-    server.close();
-});
+const app = new App({
+    path: '/api',
+    port: process.env.API_PORT as unknown as number,
+    middlewares: [],
+    controllers: [...v1]
+}).app;
 
 describe('POST /api/auth/login', () => {
     const URL = '/api/auth/login';
@@ -55,7 +52,6 @@ describe('POST /api/auth/login', () => {
         spyVerifyPassword.mockReturnValueOnce(true);
 
         const response = await request(app).post(URL).send(validLoginCredentials);
-        console.log(response.body);
         expect(response.status).toBe(200);
     });
 });
