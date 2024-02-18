@@ -8,16 +8,16 @@ export class AuthenticationValidator extends BaseValidator {
             email: {
                 in: 'body',
                 isEmail: true,
-                errorMessage: 'Email inválido'
+                errorMessage: 'Credenciais Inválidas'
             },
             password: {
                 in: 'body',
                 isString: true,
                 isLength: {
                     options: { min: 8 },
-                    errorMessage: 'Senha inválida'
+                    errorMessage: 'Credenciais Inválidas'
                 },
-                errorMessage: 'Senha inválida'
+                errorMessage: 'Credenciais Inválidas'
             }
         });
     }

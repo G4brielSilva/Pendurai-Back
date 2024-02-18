@@ -40,7 +40,7 @@ export class AuthenticationController extends BaseController {
         const { email, password } = req.body;
 
         const authentication = await new AuthenticationRepository().getHashedPassword(email);
-        if (!authentication) return RouteResponse.badRequest(res, 'Credenciais Inválidas');
+        if (!authentication || authentication.user.deletedAt) return RouteResponse.badRequest(res, 'Credenciais Inválidas');
 
         const { password: hashedPassword, salt, user, id: authId } = authentication;
 
