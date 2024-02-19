@@ -18,7 +18,7 @@ export class AuthenticationValidator extends BaseValidator {
                     options: async (email: string, { req }): Promise<void> => {
                         const authentication = await new AuthenticationRepository().findByEmail(email);
 
-                        if (!authentication || authentication?.user?.deletedAt) return Promise.reject();
+                        if (!authentication || authentication.user.deletedAt) return Promise.reject();
 
                         req.body.authentication = authentication;
                         return Promise.resolve();

@@ -64,6 +64,17 @@ describe('AuthenticationController', () => {
             expect(response.status).toBe(400);
         });
 
+        it('should return 400 if a login is tried to a non existing User', async () => {
+            spyVerifyPassword.mockReturnValueOnce(true);
+
+            const response = await request(app).post(URL).send({
+                ...validLoginCredentials,
+                email: 'non_existing_account@email.com'
+            });
+
+            expect(response.status).toBe(400);
+        });
+
         it('should return 200 if valid email and password was provided', async () => {
             spyVerifyPassword.mockReturnValueOnce(true);
 
