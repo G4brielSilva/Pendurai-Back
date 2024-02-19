@@ -2,9 +2,11 @@ import { Request, Response } from 'express';
 import { DeepPartial } from 'typeorm';
 import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
+import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Contoller';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { POST } from '../../../decorators/methods';
+import { PublicRoute } from '../../../decorators/roles';
 import { Authentication, User } from '../../../library/entity';
 import { AuthenticationRepository, UserRepository } from '../../../library/repository';
 import { JWT } from '../../../third-party/Jwt';
@@ -37,15 +39,19 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/Success200'
      */
     @POST('/login')
+    @PublicRoute()
     @Middlewares(AuthenticationValidator.login())
     public async login(req: Request, res: Response): Promise<void> {
         const { authentication } = req.body;
         const {
             id: authId,
-            user: { id: userId }
+            user: { id: userId },
+            admin
         } = authentication;
 
-        const token = JWT.generateAccessToken(userId, authId);
+        const role = admin ? EnumRoles.ADMIN : EnumRoles.USER;
+
+        const token = JWT.generateAccessToken(userId, authId, role);
 
         return RouteResponse.success(res, { Authorization: `Bearer ${token}` });
     }
@@ -81,6 +87,7 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/Success200'
      */
     @POST('/register')
+    @PublicRoute()
     @Middlewares(AuthenticationValidator.register())
     public async register(req: Request, res: Response): Promise<void> {
         const { email, password, name } = req.body;
