@@ -6,7 +6,7 @@ import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Contoller';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { POST } from '../../../decorators/methods';
-import { PublicRoute } from '../../../decorators/roles';
+import { PublicRoute, Roles } from '../../../decorators/roles';
 import { Authentication, User } from '../../../library/entity';
 import { AuthenticationRepository, UserRepository } from '../../../library/repository';
 import { JWT } from '../../../third-party/Jwt';
@@ -33,7 +33,7 @@ export class AuthenticationController extends BaseController {
      *                 example: 'email@email.com'
      *               password:
      *                 type: string
-     *                 example: 'password'
+     *                 example: 'P@2sword'
      *     responses:
      *       200:
      *         $ref: '#/components/responses/Success200'
@@ -50,10 +50,38 @@ export class AuthenticationController extends BaseController {
         } = authentication;
 
         const role = admin ? EnumRoles.ADMIN : EnumRoles.USER;
-
         const token = JWT.generateAccessToken(userId, authId, role);
 
         return RouteResponse.success(res, { Authorization: `Bearer ${token}` });
+    }
+
+    /**
+     * @swagger
+     * /api/auth/logout:
+     *   post:
+     *     summary: Logout de usuário
+     *     tags: [Authentication]
+     *     description: Faz o logout do usuário
+     *     security:
+     *       - BearerAuth: []
+     *     responses:
+     *       204:
+     *         $ref: '#/components/responses/SuccessEmpty204'
+     */
+    @POST('/logout')
+    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
+    @Middlewares()
+    public async logout(req: Request, res: Response): Promise<void> {
+        try {
+            const { authorization } = req.headers;
+
+            await JWT.deactiveToken(authorization);
+
+            return RouteResponse.successEmpty(res);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            return RouteResponse.serverError(error.message, res);
+        }
     }
 
     /**

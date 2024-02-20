@@ -10,7 +10,7 @@ export class Redis {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async addTokenBlackList(key: string): Promise<any> {
+    public async addTokenBlackList(key: string): Promise<string | null> {
         await this.clientConnect();
 
         await this.client.set(`blacklist:${key}`, 'true', { EX: 60 * 60 * 24, NX: true });
@@ -18,7 +18,7 @@ export class Redis {
 
         await this.clienteClose();
 
-        return Promise.resolve(result === 'true');
+        return Promise.resolve(result);
     }
 
     private async getTokenByBlackList(key: string): Promise<string | null> {
