@@ -36,6 +36,15 @@ services:
             - .env/redis.env
         networks:
             - pendurai-network
+    pendurai-smtp:
+        image: namshi/smtp:latest
+        restart: always
+        ports:
+            - "4445:1025"
+        env_file:
+            - .env/namshi.env
+        networks:
+            - pendurai-network
 
 networks:
     pendurai-network:
