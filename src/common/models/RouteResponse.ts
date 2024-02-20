@@ -39,7 +39,7 @@ export class RouteResponse {
         res.status(404).send(RouteResponse.setResponse(message, false));
     }
 
-    public static serverError(error: any, res: Response): void {
+    public static serverError(error: string | any, res: Response): void {
         res.status(500).send(RouteResponse.setResponse(error, false));
     }
 }
