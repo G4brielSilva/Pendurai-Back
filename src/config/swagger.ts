@@ -17,7 +17,8 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
         components: {
             responses: {
                 Success200: {
-                    description: 'Sucesso',
+                    code: 200,
+                    description: 'Sucess',
                     content: {
                         'application/json': {
                             schema: {
@@ -25,23 +26,27 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
                                 properties: {
                                     message: {
                                         type: 'string',
-                                        description: 'Mensagem de sucesso'
+                                        description: 'Sucess message'
                                     },
                                     data: {
                                         type: 'object',
-                                        description: 'Dados retornados pela requisição'
+                                        description: 'Returned data from request'
                                     }
                                 }
                             }
                         }
                     }
+                },
+                SuccessEmpty204: {
+                    description: 'Sucess Empty'
                 }
             },
             securitySchemes: {
                 BearerAuth: {
                     in: 'header',
                     type: 'http',
-                    scheme: 'bearer'
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT'
                 }
             }
         }

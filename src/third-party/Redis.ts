@@ -9,6 +9,7 @@ export class Redis {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async addTokenBlackList(key: string): Promise<any> {
         await this.clientConnect();
 
