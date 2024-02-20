@@ -27,6 +27,15 @@ services:
             - mariadb_data:/var/lib/mysql
         networks:
             - pendurai-network
+    pendurai-redis:
+        image: redis:latest
+        restart: always
+        ports:
+            - "6379:6379"
+        env_file:
+            - .env/redis.env
+        networks:
+            - pendurai-network
 
 networks:
     pendurai-network:
