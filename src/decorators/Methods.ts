@@ -3,26 +3,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
-function httpMethod(path: string, method: string, cache: boolean) {
+function httpMethod(path: string, method: string) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         Reflect.defineMetadata('path', path, descriptor.value);
         Reflect.defineMetadata('method', method, descriptor.value);
-        Reflect.defineMetadata('cache', cache, descriptor.value);
     };
 }
 
-export function Get(path: string = '/', cache: boolean = false) {
-    return httpMethod(path, 'get', cache);
+export function Get(path: string = '/') {
+    return httpMethod(path, 'get');
 }
 
-export function Post(path: string = '/', cache: boolean = false) {
-    return httpMethod(path, 'post', cache);
+export function Post(path: string = '/') {
+    return httpMethod(path, 'post');
 }
 
-export function Put(path: string = '/', cache: boolean = false) {
-    return httpMethod(path, 'put', cache);
+export function Put(path: string = '/') {
+    return httpMethod(path, 'put');
 }
 
-export function Delete(path: string = '/', cache: boolean = false) {
-    return httpMethod(path, 'delete', cache);
+export function Delete(path: string = '/') {
+    return httpMethod(path, 'delete');
 }
