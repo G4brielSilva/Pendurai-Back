@@ -12,7 +12,7 @@
         "lint:fix": "eslint ./src/ --ext .ts --fix",
         "build:docs": "npm run build && npm run docs",
         "start": "nodemon -L",
-        "docs": "typedoc --entryPointStrategy expand --out docs src",
+        "docs": "typedoc",
         "prepare": "husky install"
     },
     "keywords": [],
