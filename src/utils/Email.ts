@@ -1,35 +1,20 @@
-import 'dotenv/config';
-import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
+import { MailSender } from '../third-party/MailSender';
+import { Password } from './Password';
 
 export class Email {
-    private transporter: Transporter;
+    /**
+     * sendForgotPasswordEmail
+     *
+     * @param { string } email
+     * @returns { Promise<void> }
+     */
+    public static async sendForgotPasswordEmail(email: string): Promise<void> {
+        const mailSender = new MailSender();
 
-    public constructor() {
-        this.transporter = nodemailer.createTransport({
-            service: process.env.EMAIL_SERVICE,
-            host: process.env.EMAIL_HOST,
-            port: Number(process.env.EMAIL_PORT),
-            secure: true,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        });
-    }
+        const recoveryCode = await Password.createRecoveryCode(email);
 
-    private getMailOptions(to: string, subject: string, text: string, html?: string): SendMailOptions {
-        return {
-            from: `Pendurai <${process.env.EMAIL_ORIGIN}>`,
-            replyTo: process.env.EMAIL_REPLY_TO,
-            to,
-            subject,
-            text,
-            html
-        };
-    }
-
-    public async sendEmail(to: string, subject: string, text: string): Promise<void> {
-        const mailOptions = this.getMailOptions(to, subject, text); // Added missing method call
-        return this.transporter.sendMail(mailOptions);
+        // Sending the email
+        const html = await mailSender.getTemplate('forgot-password');
+        return mailSender.sendEmail(email, 'Recuperação de senha - Penduraí', `Recovery Code: ${recoveryCode}`, html, { recoveryCode });
     }
 }
