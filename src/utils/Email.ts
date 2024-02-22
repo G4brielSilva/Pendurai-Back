@@ -6,8 +6,10 @@ export class Email {
 
     public constructor() {
         this.transporter = nodemailer.createTransport({
+            service: process.env.EMAIL_SERVICE,
             host: process.env.EMAIL_HOST,
             port: Number(process.env.EMAIL_PORT),
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD
@@ -17,7 +19,8 @@ export class Email {
 
     private getMailOptions(to: string, subject: string, text: string, html?: string): SendMailOptions {
         return {
-            from: process.env.EMAIL_ORIGIN,
+            from: `Pendurai <${process.env.EMAIL_ORIGIN}>`,
+            replyTo: process.env.EMAIL_REPLY_TO,
             to,
             subject,
             text,
