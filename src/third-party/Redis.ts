@@ -107,7 +107,7 @@ export class Redis {
     public async setRecoveryCode(email: string, code: string): Promise<void> {
         await this.clientConnect();
 
-        await this.client.set(this.createRecoveryCodeKey(email), code, { EX: 60 * 10 });
+        await this.client.set(this.createRecoveryCodeKey(email), code, { EX: 60 * 12 });
 
         await this.clienteClose();
     }

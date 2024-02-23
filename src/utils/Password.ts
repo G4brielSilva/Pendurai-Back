@@ -2,6 +2,14 @@ import crypto from 'crypto';
 import { Redis } from '../third-party/Redis';
 
 export class Password {
+    public static genSalt(): string {
+        return crypto.randomBytes(16).toString('hex');
+    }
+
+    public static hashPassword(password: string, salt: string): string {
+        return crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
+    }
+
     /**
      * verifyPassword
      *
@@ -44,10 +52,10 @@ export class Password {
      * invalidateRecoveryCode
      *
      * @param { string } email
-     * @return { Promise<void> }
+     * @return { Promise<boolean> }
      */
-    public static async invalidateRecoveryCode(email: string): Promise<void> {
-        new Redis().deleteRecoveryCode(email);
+    public static async invalidateRecoveryCode(email: string): Promise<boolean> {
+        return new Redis().deleteRecoveryCode(email);
     }
 
     /**

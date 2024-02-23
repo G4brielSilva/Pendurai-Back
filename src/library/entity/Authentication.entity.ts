@@ -1,5 +1,5 @@
-import crypto from 'crypto';
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Password } from '../../utils/Password';
 import { User } from './User.entity';
 
 @Entity()
@@ -31,7 +31,7 @@ export class Authentication {
 
     @BeforeInsert()
     async hashPassword(): Promise<void> {
-        this.salt = crypto.randomBytes(16).toString('hex');
-        this.password = crypto.pbkdf2Sync(this.password, this.salt, 1000, 64, `sha512`).toString(`hex`);
+        this.salt = Password.genSalt();
+        this.password = Password.hashPassword(this.password, this.salt);
     }
 }
