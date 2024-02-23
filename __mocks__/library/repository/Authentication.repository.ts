@@ -41,4 +41,8 @@ export class AuthenticationRepository {
     public insert = jest.fn().mockImplementation((): Promise<Authentication> => {
         return Promise.resolve(this.mockList[0]);
     });
+
+    public changePassword = jest.fn().mockImplementation((): Promise<Authentication> => {
+        return Promise.resolve(this.mockList[0]);
+    });
 }
