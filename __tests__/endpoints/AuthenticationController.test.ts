@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { JWT } from '../../__mocks__/third-party/Jwt';
 import { App } from '../../src/config/App';
 import { v1 } from '../../src/endpoints/v1';
+import { JWT } from '../../src/third-party/Jwt';
 import { Password } from '../../src/utils/Password';
 
 // Repositories mock

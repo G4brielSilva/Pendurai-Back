@@ -11,8 +11,10 @@ module.exports = {
         'src/common/models/',
         'src/config/',
         'src/server.ts',
-        'src/third-party/swagger/',
-        'src/cron/'
+        'src/cron/',
+        'src/third-party',
+        'src/utils/EnvUtils.ts',
+        'src/decorators'
     ],
     preset: 'ts-jest',
     testEnvironment: 'node',

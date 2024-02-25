@@ -76,7 +76,7 @@ export class AuthenticationController extends BaseController {
         try {
             const { authorization } = req.headers;
 
-            await JWT.deactiveToken(authorization);
+            await JWT.deactiveToken(authorization as string);
 
             return RouteResponse.successEmpty(res);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

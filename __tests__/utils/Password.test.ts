@@ -1,3 +1,5 @@
+import { Hash } from '../../src/third-party/Hash';
+import { Redis } from '../../src/third-party/Redis';
 import { Password } from '../../src/utils/Password';
 
 // Third-Party mock
@@ -6,6 +8,23 @@ jest.mock('../../src/third-party/Redis', () => {
 });
 
 describe('Password', () => {
+    it('shoul genSalt generate an salt', () => {
+        const salt = Password.genSalt();
+
+        expect(salt).toBeDefined();
+        expect(salt.length).toBe(32);
+    });
+
+    it('shoul hashPassword generate an hashedPassword', () => {
+        const password = 'an_password';
+        const salt = 'an_salt';
+
+        const hashedPassword = Password.hashPassword(password, salt);
+
+        expect(hashedPassword).toBeDefined();
+        expect(hashedPassword).toBe(Hash.hash(password, salt));
+    });
+
     it('should call verifyPassword with correct params', async () => {
         const verifyPasswordSpy = jest.spyOn(Password, 'verifyPassword');
 
@@ -37,8 +56,20 @@ describe('Password', () => {
         const email = 'valid_email';
         const recoveryCode = 'valid_recovery_code';
 
-        Password.recoveryCodeIsValid(email, recoveryCode);
+        await Password.recoveryCodeIsValid(email, recoveryCode);
 
         expect(recoveryCodeIsValidSpy).toHaveBeenCalledWith(email, recoveryCode);
+    });
+
+    it('should call recoveryCodeIsValid with correct params', async () => {
+        const recoveryCode = 'valid_recovery_code';
+        jest.spyOn(Redis.prototype, 'getRecoveryCode').mockResolvedValue(recoveryCode);
+
+        const deleteRecoveryCodeSpy = jest.spyOn(Redis.prototype, 'deleteRecoveryCode');
+        const email = 'valid_email';
+
+        await Password.recoveryCodeIsValid(email, recoveryCode);
+
+        expect(deleteRecoveryCodeSpy).toHaveBeenCalledTimes(1);
     });
 });
