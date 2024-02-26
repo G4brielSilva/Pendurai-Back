@@ -145,6 +145,23 @@ describe('AuthenticationController', () => {
         });
     });
 
+    describe('GET - verify-recovery-code/:recoveryCode', () => {
+        const URL = '/api/auth/verify-recovery-code';
+        const validCode = 'ABC123'
+
+        it('should return 400 if an invalid code was provided', async () => {
+            const response = await request(app).get(`${URL}/invalid_code`);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 204 if an valid email was provided', async () => {
+            const response = await request(app).get(`${URL}/${validCode}`);
+
+            expect(response.status).toBe(204);
+        });
+    });
+
     describe('PUT - change-password', () => {
         const URL = '/api/auth/change-password';
 
