@@ -6,7 +6,7 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
         info: {
             title: 'Penduraí API',
             description: 'Endpoints do projeto Penduraí.',
-            version: '1.3.0'
+            version: '1.5.0'
         },
         host: 'localhost:8080',
         tags: [],
