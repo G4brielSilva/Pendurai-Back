@@ -77,7 +77,29 @@ export class AuthenticationValidator extends BaseValidator {
     }
 
     /**
-     * forgotPassword
+     * verifyRecoveryCode
+     * @return { Array<RequestHandler> }
+     */
+    public static verifyRecoveryCode(): Array<RequestHandler> {
+        return AuthenticationValidator.validationList({
+            recoveryCode: {
+                in: 'params',
+                isString: true,
+                isLength: { options: { min: 6, max: 6 } },
+                custom: {
+                    options: async (recoveryCode: string, { req }): Promise<void> => {
+                        const isValid = await Password.recoveryCodeIsValid(req.body.email, recoveryCode);
+
+                        return isValid ? Promise.resolve() : Promise.reject();
+                    }
+                },
+                errorMessage: 'invalid recoveryCode'
+            }
+        });
+    }
+
+    /**
+     * changePassword
      * @return { Array<RequestHandler> }
      */
     public static changePassword(): Array<RequestHandler> {
@@ -109,7 +131,7 @@ export class AuthenticationValidator extends BaseValidator {
                         return isValid ? Promise.resolve() : Promise.reject();
                     }
                 },
-                errorMessage: 'Invalid recoveryCode'
+                errorMessage: 'invalid recoveryCode'
             },
             newPassword: {
                 in: 'body',
