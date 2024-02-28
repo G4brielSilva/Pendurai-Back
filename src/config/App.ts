@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'dotenv/config';
 import express, { Application, Router } from 'express';
+import helmet from 'helmet';
 import path from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -43,6 +44,7 @@ export class App {
         this.assets = appInit.assets;
 
         this.app.use(express.json());
+        this.app.use(helmet());
 
         this.middlewares(appInit.middlewares);
         this.routes(appInit.controllers);
