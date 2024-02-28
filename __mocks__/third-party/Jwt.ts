@@ -28,7 +28,7 @@ export class JWT {
     });
 
     public static decodeToken(token: string): any {
-        return JWT.decodedTokens[token as keyof typeof JWT.decodedTokens] || { error: 'Invalid Token' };
+        return JWT.decodedTokens[token as keyof typeof JWT.decodedTokens] || { error: true, errorMessage: 'Invalid Token' };
     }
 
     public static async deactiveToken(token: string): Promise<boolean> {
@@ -40,4 +40,3 @@ export class JWT {
 export {
     generateAccessTokenFn
 };
-
