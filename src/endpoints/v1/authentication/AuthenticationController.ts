@@ -3,7 +3,7 @@ import { DeepPartial } from 'typeorm';
 import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
-import { Controller } from '../../../decorators/Contoller';
+import { Controller } from '../../../decorators/Controller';
 import { Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { PublicRoute, Roles } from '../../../decorators/Roles';
