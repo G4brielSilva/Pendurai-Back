@@ -1,14 +1,8 @@
-import { DeepPartial, Repository } from 'typeorm';
-import { dataSource } from '../../config/database';
+import { DeepPartial } from 'typeorm';
+import { BaseRepository } from '../../common/models/BaseRepository';
 import { User } from '../entity';
 
-export class UserRepository {
-    repository: Repository<User>;
-
-    public constructor() {
-        this.repository = dataSource.getRepository(User);
-    }
-
+export class UserRepository extends BaseRepository<User> {
     /**
      * insert
      *

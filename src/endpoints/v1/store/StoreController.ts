@@ -52,6 +52,44 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
+     * /api/store/{storeId}:
+     *   get:
+     *     summary: Listagem de Lojas
+     *     tags: [Store]
+     *     description: Listagem de Lojas vinculadas ao usuário
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - $ref: '#/components/parameters/page'
+     *       - $ref: '#/components/parameters/size'
+     *       - $ref: '#/components/parameters/order'
+     *       - $ref: '#/components/parameters/orderBy'
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: Id da loja a ser listada
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Get('/:storeId')
+    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Middlewares(StoreValidator.listStoreById())
+    public async listStoreById(req: Request, res: Response): Promise<void> {
+        const {
+            storeId,
+            authentication: { role, userId: owner }
+        } = req.body;
+
+        const store = await new StoreRepository().findStoreById(storeId, owner, role);
+
+        return RouteResponse.success(res, store);
+    }
+
+    /**
+     * @swagger
      * /api/store:
      *   get:
      *     summary: Criar de Loja no banco
