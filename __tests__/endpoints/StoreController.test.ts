@@ -7,25 +7,10 @@ jest.mock('../../src/library/repository/Store.repository', () => {
     return jest.requireActual('../../__mocks__/library/repository/Store.repository');
 });
 
-// jest.mock('../../src/library/repository/User.repository', () => {
-//     return jest.requireActual('../../__mocks__/library/repository/User.repository');
-// });
-
 // Third-Party mock
 jest.mock('../../src/third-party/Jwt', () => {
     return jest.requireActual('../../__mocks__/third-party/Jwt');
 });
-
-// // Utils mock
-// jest.mock('../../src/utils/Email', () => {
-//     return jest.requireActual('../../__mocks__/utils/Email');
-// });
-
-// jest.mock('../../src/utils/Password', () => {
-//     return jest.requireActual('../../__mocks__/utils/Password');
-// });
-
-
 
 const app = new App({
     path: '/api',
@@ -65,6 +50,16 @@ describe('StoreController', () => {
 
         it('should return 200 if valid email and password was provided', async () => {
             const response = await request(app).post(URL).send(validStoreCredentials).set('Authorization', `Bearer ${AN_VALID_TOKEN}`);
+
+            expect(response.status).toBe(200);
+        });
+    });
+
+    describe('GET - listStores', () => {
+        const URL = '/api/store';
+
+        it('should return 200 if valid email and password was provided', async () => {
+            const response = await request(app).get(URL).set('Authorization', `Bearer ${AN_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
         });
