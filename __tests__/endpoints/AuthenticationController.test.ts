@@ -97,7 +97,7 @@ describe('AuthenticationController', () => {
 
     describe('POST - logout', () => {
         const URL = '/api/auth/logout';
-        const validToken = 'AN_VALID_TOKEN';
+        const validToken = 'USER_VALID_TOKEN';
 
         it('should return 400 if an invalid token was provided', async () => {
             const response = await request(app).post(URL).set('Authorization', 'Bearer Invalid_token');

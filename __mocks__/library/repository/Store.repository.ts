@@ -7,7 +7,7 @@ export class StoreRepository {
             id: '1',
             name: 'store_name',
             cnpj: '62781317000160',
-            owner: '1'
+            owner: 'valid_user_id'
         }
     ] as unknown as Store[];
 
@@ -17,5 +17,13 @@ export class StoreRepository {
 
     public async list(owner: string, role: string): Promise<Store[]> {
         return this.mockList;
+    }
+
+    public async findById(storeId: string): Promise<Store> {
+        return this.mockList.find(store => store.id === storeId) as Store;
+    }
+
+    public async findStoreById(storeId: string, owner: string, role: string): Promise<Store> {
+        return this.mockList.find(store => store.id === storeId) as Store;
     }
 }

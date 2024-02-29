@@ -8,8 +8,8 @@ const generateAccessTokenFn = jest.fn();
 
 export class JWT {
     public static decodedTokens = {
-        AN_VALID_TOKEN: { user: 'AN_VALID_USER', authId: 'AN_VALID_AUTH_ID', role: EnumRoles.USER },
-        ADMIN_VALID_TOKEN: { user: 'AN_VALID_USER', authId: 'AN_VALID_AUTH_ID', role: EnumRoles.ADMIN }
+        USER_VALID_TOKEN: { userId: 'registered_user_id', authId: '62d5bb3b188314032c4f7815', role: EnumRoles.USER },
+        ADMIN_VALID_TOKEN: { userId: 'valid_user_id', authId: '62d5bb3b188314032c4f7813', role: EnumRoles.ADMIN }
     };
 
     public static authenticateToken(req: Request, res: Response, next: NextFunction): void {
@@ -24,7 +24,7 @@ export class JWT {
     }
 
     public static generateAccessToken = generateAccessTokenFn.mockImplementation((userId: string, authId: string): string => {
-        return 'AN_VALID_TOKEN';
+        return 'USER_VALID_TOKEN';
     });
 
     public static decodeToken(token: string): any {
