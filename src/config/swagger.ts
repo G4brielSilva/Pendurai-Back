@@ -15,6 +15,46 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
             url: '../swagger.json'
         },
         components: {
+            parameters: {
+                page: {
+                    in: 'query',
+                    name: 'page',
+                    required: false,
+                    schema: {
+                        type: 'integer',
+                        default: 1
+                    },
+                    description: 'Número da página para paginação'
+                },
+                size: {
+                    in: 'query',
+                    name: 'size',
+                    required: false,
+                    schema: {
+                        type: 'integer',
+                        default: 10
+                    },
+                    description: 'Quantidade de itens por página para paginação'
+                },
+                order: {
+                    in: 'query',
+                    name: 'order',
+                    required: false,
+                    schema: {
+                        type: 'string'
+                    },
+                    description: 'Campo para ordenação'
+                },
+                orderBy: {
+                    in: 'query',
+                    name: 'orderBy',
+                    required: false,
+                    schema: {
+                        type: 'string',
+                        enum: ['ASC', 'DESC']
+                    }
+                }
+            },
             responses: {
                 Success200: {
                     code: 200,
