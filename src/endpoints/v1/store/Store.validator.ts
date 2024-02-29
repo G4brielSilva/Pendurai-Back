@@ -2,7 +2,6 @@ import { RequestHandler } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
 import { Validations } from '../../../common/models/Validations';
 
-// TODO: adicionar model para poupar repetição de validação
 export class StoreValidator extends BaseValidator {
     /**
      * createStore
