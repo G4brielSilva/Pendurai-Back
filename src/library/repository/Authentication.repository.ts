@@ -3,7 +3,7 @@ import { BaseRepository } from '../../common/models/BaseRepository';
 import { Password } from '../../utils/Password';
 import { Authentication } from '../entity';
 
-export class AuthenticationRepository extends BaseRepository<Authentication> {
+export class AuthenticationRepository extends BaseRepository(Authentication) {
     /**
      * findByEmail
      *

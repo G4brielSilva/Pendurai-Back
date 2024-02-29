@@ -1,19 +1,24 @@
-import { Entity, ObjectLiteral, Repository } from 'typeorm';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line max-classes-per-file
+import { EntityTarget, ObjectLiteral, Repository } from 'typeorm';
 import { dataSource } from '../../config/database';
 
-export class BaseRepository<T extends ObjectLiteral> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    repository: Repository<T>;
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>) => {
+    class GenericBaseRepository {
+        protected repository: Repository<T>;
 
-    public constructor() {
-        this.repository = dataSource.getRepository<T>(Entity);
-    }
+        constructor() {
+            this.repository = dataSource.getRepository(entity);
+        }
 
-    public async findById(id: string): Promise<T | null> {
-        return this.repository.findOne({ where: { id: id as unknown as NonNullable<T[string]> } });
-    }
+        public async findById(id: any): Promise<T | null> {
+            return this.repository.findOne({ where: { id } });
+        }
 
-    public async find(): Promise<T[]> {
-        return this.repository.find();
+        public async find(): Promise<T[]> {
+            return this.repository.find();
+        }
     }
-}
+    return GenericBaseRepository;
+};

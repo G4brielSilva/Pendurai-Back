@@ -1,13 +1,11 @@
-import { DeepPartial, FindManyOptions, Repository } from 'typeorm';
+import { DeepPartial, FindManyOptions } from 'typeorm';
 import { IListParams } from '../../common/models/BaseController';
 import { BaseRepository } from '../../common/models/BaseRepository';
 import { TObject } from '../../common/models/TObject';
 import { EnumRoles } from '../../common/models/enum/EnumRoles';
 import { Store } from '../entity';
 
-export class StoreRepository extends BaseRepository<Store> {
-    repository: Repository<Store>;
-
+export class StoreRepository extends BaseRepository(Store) {
     /**
      * insert
      *
@@ -61,10 +59,9 @@ export class StoreRepository extends BaseRepository<Store> {
         const options: FindManyOptions<Store> = {};
         const where: TObject = { id: storeId };
 
-        if (role !== EnumRoles.ADMIN) where.owner = owner;
+        if (role !== EnumRoles.ADMIN) where.owner = { id: owner };
 
         options.where = where;
-
         return this.repository.findOne(options);
     }
 }

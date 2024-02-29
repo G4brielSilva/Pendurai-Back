@@ -32,7 +32,6 @@ export class StoreValidator extends BaseValidator {
                 custom: {
                     options: async (storeId: string, { req }): Promise<void> => {
                         const store = await new StoreRepository().findById(storeId);
-
                         req.body.storeId = storeId;
 
                         return store ? Promise.resolve() : Promise.reject();

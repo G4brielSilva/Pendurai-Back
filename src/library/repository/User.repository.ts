@@ -2,7 +2,7 @@ import { DeepPartial } from 'typeorm';
 import { BaseRepository } from '../../common/models/BaseRepository';
 import { User } from '../entity';
 
-export class UserRepository extends BaseRepository<User> {
+export class UserRepository extends BaseRepository(User) {
     /**
      * insert
      *

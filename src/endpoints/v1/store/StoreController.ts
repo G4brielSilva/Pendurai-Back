@@ -60,10 +60,6 @@ export class StoreController extends BaseController {
      *     security:
      *       - BearerAuth: []
      *     parameters:
-     *       - $ref: '#/components/parameters/page'
-     *       - $ref: '#/components/parameters/size'
-     *       - $ref: '#/components/parameters/order'
-     *       - $ref: '#/components/parameters/orderBy'
      *       - in: path
      *         name: storeId
      *         required: true
@@ -84,7 +80,6 @@ export class StoreController extends BaseController {
         } = req.body;
 
         const store = await new StoreRepository().findStoreById(storeId, owner, role);
-
         return RouteResponse.success(res, store);
     }
 
