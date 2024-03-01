@@ -47,7 +47,6 @@ export class StoreController extends BaseController {
             authentication: { userId: owner }
         } = req.body;
 
-        console.log(req.body);
         const store = await new StoreRepository().create({ name, cnpj, owner });
         return RouteResponse.success(res, store);
     }
