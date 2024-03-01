@@ -27,7 +27,7 @@ export class RouteResponse {
         res.status(400).send(RouteResponse.setResponse(error, false));
     }
 
-    public static unauthorized(message: string, res: Response): void {
+    public static unauthorized(res: Response, message: string = 'Unauthorized'): void {
         res.status(401).send(RouteResponse.setResponse(message, false));
     }
 

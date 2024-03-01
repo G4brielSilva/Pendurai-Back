@@ -34,12 +34,12 @@ export class RoutesSetup {
         return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
             try {
                 const token = req.headers.authorization?.split(' ')[1];
-                if (!token) return RouteResponse.badRequest(res, 'invalid Token');
+                if (!token) return RouteResponse.unauthorized(res);
 
                 const result = await JWT.decodeToken(token as string);
 
                 if (result?.error) return RouteResponse.badRequest(res, result.errorMessage);
-                if (!result || !roles.includes(result?.role)) return RouteResponse.unauthorized('Unauthorized', res);
+                if (!result || !roles.includes(result?.role)) return RouteResponse.unauthorized(res);
                 req.body.authentication = result;
                 return next();
             } catch (error: Error | any) {
