@@ -14,7 +14,7 @@ export class JWT {
 
     public static authenticateToken(req: Request, res: Response, next: NextFunction): void {
         const authHeader = req.headers.authorization;
-        console.log(req.headers);
+
         if (!authHeader) return RouteResponse.unauthorized(res);
         const token = authHeader.split(' ')[1];
 
