@@ -8,7 +8,9 @@ export class StoreRepository {
             id: '1',
             name: 'store_name',
             cnpj: '62781317000160',
-            owner: 'valid_user_id'
+            owner: {
+                id: 'valid_user_id'
+            }
         }
     ] as unknown as Store[];
 
@@ -26,5 +28,9 @@ export class StoreRepository {
 
     public async update(store: DeepPartial<Store>): Promise<Store> {
         return this.mockList[0];
+    }
+
+    public async softDeleteStore(storeId: string): Promise<void> {
+        return Promise.resolve();
     }
 }

@@ -57,11 +57,9 @@ export class StoreValidator extends BaseValidator {
         if (!store) return RouteResponse.badRequest(res, 'invalid StoreId');
 
         const { role, userId } = req.body.authentication;
-        console.log(store);
-        console.log(req.body.authentication);
+
         if (store?.owner.id !== userId || role !== EnumRoles.ADMIN) return RouteResponse.unauthorized(res);
-        console.log(store);
-        console.log(req.body.authentication);
+
         req.body.storeId = storeId;
         return next();
     }
