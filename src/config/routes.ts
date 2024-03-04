@@ -34,6 +34,7 @@ export class RoutesSetup {
         return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
             try {
                 const token = req.headers.authorization?.split(' ')[1];
+
                 if (!token) return RouteResponse.unauthorized(res);
 
                 const result = await JWT.decodeToken(token as string);
