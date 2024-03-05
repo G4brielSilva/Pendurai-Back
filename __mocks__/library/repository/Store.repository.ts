@@ -26,6 +26,18 @@ export class StoreRepository {
         return this.mockList.find(store => store.id === storeId) as Store;
     }
 
+    public async findStores(): Promise<Store[]> {
+        return this.mockList;
+    }
+
+    public async findStoreById(storeId: string): Promise<Store> {
+        return this.mockList.find(store => store.id === storeId) as Store;
+    }
+
+    public async findStoreByCnpj(cnpj: string): Promise<Store | null> {
+        return Promise.resolve(null);
+    }
+
     public async update(store: DeepPartial<Store>): Promise<Store> {
         return this.mockList[0];
     }
