@@ -118,9 +118,9 @@ export class StoreController extends BaseController {
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
     @Middlewares(StoreValidator.onlyId)
     public async onlyId(req: Request, res: Response): Promise<void> {
-        const { storeId } = req.body;
+        const { authentication, storeId } = req.body;
 
-        const store = await new StoreRepository().findById(storeId);
+        const store = await new StoreRepository().findStoreById(authentication, storeId);
         return RouteResponse.success(res, store);
     }
 
@@ -145,8 +145,9 @@ export class StoreController extends BaseController {
     @Get()
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
     public async listStores(req: Request, res: Response): Promise<void> {
-        const rows = await new StoreRepository().find(StoreController.getListParams(req));
-        return RouteResponse.success(res, rows);
+        const { authentication } = req.body;
+        const [rows, count] = await new StoreRepository().findStores(authentication, StoreController.getListParams(req));
+        return RouteResponse.success(res, { rows, count });
     }
 
     /**
