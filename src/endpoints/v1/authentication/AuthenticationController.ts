@@ -132,7 +132,7 @@ export class AuthenticationController extends BaseController {
      *         description: O código de recuperação a ser verificado
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/Success2004'
+     *         $ref: '#/components/responses/SuccessEmpty204'
      */
     @Get('/verify-recovery-code/:recoveryCode')
     @PublicRoute()
