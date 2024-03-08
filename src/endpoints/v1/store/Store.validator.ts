@@ -59,6 +59,8 @@ export class StoreValidator extends BaseValidator {
                         result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
                         if (result !== Number(verifiersDigits.charAt(1))) return Promise.reject();
 
+                        // Verifing if cnpj already exists in the system
+
                         const store = await new StoreRepository().findStoreByCnpj(cnpj);
 
                         // eslint-disable-next-line prefer-promise-reject-errors

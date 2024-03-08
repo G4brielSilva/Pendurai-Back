@@ -2,7 +2,6 @@ node_modules
 dist
 coverage
 .env
-package-lock.json
 .tool-versions
 db
 jest
