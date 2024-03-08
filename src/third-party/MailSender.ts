@@ -1,9 +1,9 @@
-import { TObject } from 'common/models/TObject';
 import 'dotenv/config';
 import { readFile } from 'fs/promises';
 import mustache from 'mustache';
 import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 import path from 'path';
+import { TObject } from '../common/models/TObject';
 
 export class MailSender {
     private transporter: Transporter;

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from './User.entity';
 
-@Entity()
+@Entity('stores')
 export class Store {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -9,7 +9,7 @@ export class Store {
     @Column({ type: 'varchar', length: 255 })
     name: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'varchar', length: 14, unique: true })
     cnpj: string;
 
     @OneToOne(() => User, { eager: true })
