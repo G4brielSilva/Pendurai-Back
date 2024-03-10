@@ -35,7 +35,7 @@ describe('StoreController', () => {
             const response = await request(app).post(URL).send({
                 ...validStoreCredentials,
                 name: 'nm'
-            }).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);;
+            }).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);
 
             expect(response.status).toBe(400);
         });
@@ -44,7 +44,7 @@ describe('StoreController', () => {
             const response = await request(app).post(URL).send({
                 ...validStoreCredentials,
                 cnpj: 'invalid_cnpj'
-            }).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);;
+            }).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);
 
             expect(response.status).toBe(400);
         });
