@@ -6,6 +6,7 @@ import { Controller } from '../../../decorators/Controller';
 import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
+import { Product } from '../../../library/entity';
 import { ProductRepository } from '../../../library/repository';
 import { StoreValidator } from '../store/Store.validator';
 import { ProductValidator } from './Product.validator';
@@ -92,6 +93,42 @@ export class ProductController extends BaseController {
     /**
      * @swagger
      * /api/store/{storeId}/product/{productId}:
+     *   get:
+     *     summary: Listando produtos
+     *     tags: [Product]
+     *     description: Listando produtos vinculados a uma loja
+     *     security:
+     *      - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: path
+     *         name: productId
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Get('/:productId')
+    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
+    @Middlewares(StoreValidator.onlyId, ProductValidator.onlyId)
+    public async listProduct(req: Request, res: Response): Promise<void> {
+        const { productId } = req.body;
+
+        const product = (await new ProductRepository().findById(productId)) as Product;
+
+        const parsedProduct = { ...product, store: { ...product.store, owner: undefined } };
+        return RouteResponse.success(res, parsedProduct);
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/product/{productId}:
      *   put:
      *     summary: Editando um produto
      *     tags: [Product]
@@ -133,9 +170,8 @@ export class ProductController extends BaseController {
         const { productId, name, description } = req.body;
 
         const product = await new ProductRepository().update(productId, { name, description });
-        const { store } = product;
 
-        const parsedProduct = { ...product, store: { ...store, owner: undefined } };
+        const parsedProduct = { ...product, store: { ...product.store, owner: undefined } };
         return RouteResponse.success(res, parsedProduct);
     }
 
