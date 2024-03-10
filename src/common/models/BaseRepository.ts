@@ -34,8 +34,14 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
             return this.repository.save(data);
         }
 
-        public async update(data: DeepPartial<T>): Promise<T> {
-            return this.repository.save(data);
+        public async update(id: any, data: DeepPartial<T>): Promise<T> {
+            const register = (await this.findById(id)) as T;
+
+            const updatedRegister = this.repository.merge(register, data);
+
+            await this.repository.save(updatedRegister);
+
+            return this.findById(id) as Promise<T>;
         }
     }
     return GenericBaseRepository;

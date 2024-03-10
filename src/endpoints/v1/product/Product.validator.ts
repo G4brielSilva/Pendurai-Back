@@ -1,13 +1,15 @@
 /* eslint-disable no-plusplus */
-import { RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
+import { RouteResponse } from '../../../common/models/RouteResponse';
+import { ProductRepository } from '../../../library/repository';
 
 export class ProductValidator extends BaseValidator {
     /**
-     * storeData - Valida dados da loja (name & cnpj)
+     * productData - Valida dados de criação de Product (name)
      * @return { Array<RequestHandler> }
      */
-    public static createProduct(): Array<RequestHandler> {
+    public static productData(): Array<RequestHandler> {
         return ProductValidator.validationList({
             name: {
                 in: 'body',
@@ -19,5 +21,23 @@ export class ProductValidator extends BaseValidator {
                 errorMessage: 'name is invalid'
             }
         });
+    }
+
+    /**
+     * onlyId - Verifica se o id passado no path é válido e correspondente a Loja
+     */
+    public static async onlyId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { productId } = req.params;
+
+        if (!productId) return RouteResponse.badRequest(res, 'productId are required');
+
+        const product = await new ProductRepository().findById(productId);
+        if (!product) return RouteResponse.badRequest(res, 'invalid productId');
+
+        const { storeId } = req.body;
+        if (product.store.id !== storeId) return RouteResponse.unauthorized(res, 'The product does not belong to this store.');
+
+        req.body.storeId = storeId;
+        return next();
     }
 }

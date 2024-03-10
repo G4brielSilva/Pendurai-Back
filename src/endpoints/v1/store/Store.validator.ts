@@ -81,7 +81,6 @@ export class StoreValidator extends BaseValidator {
         const { storeId } = req.params;
 
         const store = await new StoreRepository().findById(storeId);
-
         if (!store) return RouteResponse.badRequest(res, 'invalid StoreId');
 
         const { role, userId } = req.body.authentication;

@@ -88,9 +88,9 @@ export class StoreController extends BaseController {
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
     @Middlewares(StoreValidator.onlyId, StoreValidator.storeData())
     public async updateStore(req: Request, res: Response): Promise<void> {
-        const { storeId: id, cnpj, name } = req.body;
+        const { storeId, cnpj, name } = req.body;
 
-        const store = await new StoreRepository().update({ id, name, cnpj });
+        const store = await new StoreRepository().update(storeId, { name, cnpj });
         RouteResponse.success(res, store);
     }
 

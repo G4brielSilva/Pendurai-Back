@@ -16,6 +16,9 @@ export class Store {
     @JoinColumn()
     owner: User;
 
+    // @ManyToOne(() => Product, (product: Product) => product.store)
+    // products: Product[];
+
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 

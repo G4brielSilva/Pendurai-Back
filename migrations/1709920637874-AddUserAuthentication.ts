@@ -6,11 +6,13 @@ export class AddUserAuthentication1709920637874 implements MigrationInterface {
         const user = (await queryRunner.manager.findBy(User, { name: 'user' }))[0];
         await queryRunner.connect();
 
-        await queryRunner.manager.insert(Authentication, {
-            email: 'email@email.com',
-            password: 'P@2sword',
-            user
-        });
+        const authenticaton = new Authentication();
+
+        authenticaton.email = 'user@email.com';
+        authenticaton.password = 'P@2sword';
+        authenticaton.user = user;
+
+        await queryRunner.manager.insert(Authentication, authenticaton);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
