@@ -59,6 +59,51 @@ describe('ProductController', () => {
         });
     });
 
+    describe('GET - listProducts', () => {
+        const URL = '/api/store/1/product';
+
+        it('should return 401 if an unauthorized User was tried to create a Product in a Store', async () => {
+            const response = await request(app).get(URL).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 200 if valid email and password was provided', async () => {
+            const response = await request(app).get(URL).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(200);
+        });
+    });
+
+    // describe('GET - listProduct', () => {
+    //     const URL = '/api/store/1/product';
+    //     const validProductId = '1';
+
+    //     it('should return 401 if an invalid User is trying to get a Store data', async () => {
+    //         const response = await request(app).get(`${URL}/${validProductId}`).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
+
+    //         expect(response.status).toBe(401);
+    //     });
+
+    //     it('should return 401 if an User was tried to update a Product from another Store', async () => {
+    //         const response = await request(app).get(`/api/store/2/product/1`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+    //         expect(response.status).toBe(401);
+    //     });
+
+    //     it('should return 400 if an invalid productId was provided', async () => {
+    //         const response = await request(app).get(`${URL}/invalid_store_id`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+    //         expect(response.status).toBe(400);
+    //     });
+
+    //     it('should return 200 if valid storeId was provided', async () => {
+    //         const response = await request(app).get(`${URL}/${validProductId}`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+    //         expect(response.status).toBe(200);
+    //     });
+    // });
+
     describe('PUT - updateProduct', () => {
         const URL = '/api/store/1/product';
 
