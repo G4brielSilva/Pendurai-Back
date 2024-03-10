@@ -75,34 +75,34 @@ describe('ProductController', () => {
         });
     });
 
-    // describe('GET - listProduct', () => {
-    //     const URL = '/api/store/1/product';
-    //     const validProductId = '1';
+    describe('GET - listProduct', () => {
+        const URL = '/api/store/1/product';
+        const validProductId = 1;
 
-    //     it('should return 401 if an invalid User is trying to get a Store data', async () => {
-    //         const response = await request(app).get(`${URL}/${validProductId}`).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
+        it('should return 401 if an invalid User is trying to get a Store data', async () => {
+            const response = await request(app).get(`${URL}/${validProductId}`).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
 
-    //         expect(response.status).toBe(401);
-    //     });
+            expect(response.status).toBe(401);
+        });
 
-    //     it('should return 401 if an User was tried to update a Product from another Store', async () => {
-    //         const response = await request(app).get(`/api/store/2/product/1`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+        it('should return 401 if an User was tried to update a Product from another Store', async () => {
+            const response = await request(app).get(`/api/store/2/product/${validProductId}`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
 
-    //         expect(response.status).toBe(401);
-    //     });
+            expect(response.status).toBe(401);
+        });
 
-    //     it('should return 400 if an invalid productId was provided', async () => {
-    //         const response = await request(app).get(`${URL}/invalid_store_id`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+        it('should return 400 if an invalid productId was provided', async () => {
+            const response = await request(app).get(`${URL}/invalid_store_id`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
 
-    //         expect(response.status).toBe(400);
-    //     });
+            expect(response.status).toBe(400);
+        });
 
-    //     it('should return 200 if valid storeId was provided', async () => {
-    //         const response = await request(app).get(`${URL}/${validProductId}`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+        it('should return 200 if valid storeId was provided', async () => {
+            const response = await request(app).get(`${URL}/1`).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
 
-    //         expect(response.status).toBe(200);
-    //     });
-    // });
+            expect(response.status).toBe(200);
+        });
+    });
 
     describe('PUT - updateProduct', () => {
         const URL = '/api/store/1/product';
