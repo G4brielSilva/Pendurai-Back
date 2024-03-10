@@ -17,7 +17,7 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
             return this.repository.findOne({ where: { id } });
         }
 
-        public async find(params: IListParams): Promise<T[]> {
+        public async find(params: IListParams): Promise<[T[], number]> {
             const skip = params.size * (params.page - 1);
             const take = params.size;
 
@@ -27,7 +27,7 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
                 options.order = { [params.order]: params.orderBy } as FindOptionsOrder<T>;
             }
 
-            return this.repository.find(options);
+            return this.repository.findAndCount(options);
         }
 
         public async create(data: DeepPartial<T>): Promise<T> {

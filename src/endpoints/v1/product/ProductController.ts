@@ -3,7 +3,7 @@ import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Controller';
-import { Delete, Post, Put } from '../../../decorators/Methods';
+import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { ProductRepository } from '../../../library/repository';
@@ -53,6 +53,40 @@ export class ProductController extends BaseController {
         const product = await new ProductRepository().create({ store, name, description });
 
         return RouteResponse.success(res, product);
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/product:
+     *   get:
+     *     summary: Listando produtos
+     *     tags: [Product]
+     *     description: Listando produtos vinculados a uma loja
+     *     security:
+     *      - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - $ref: '#/components/parameters/page'
+     *       - $ref: '#/components/parameters/size'
+     *       - $ref: '#/components/parameters/order'
+     *       - $ref: '#/components/parameters/orderBy'
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Get()
+    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
+    @Middlewares(StoreValidator.onlyId)
+    public async listProducts(req: Request, res: Response): Promise<void> {
+        const [rows, count] = await new ProductRepository().find(ProductController.getListParams(req));
+
+        const parsedRows = rows.map(product => ({ ...product, store: undefined }));
+
+        return RouteResponse.success(res, { rows: parsedRows, count });
     }
 
     /**
