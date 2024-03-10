@@ -3,7 +3,7 @@ import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Controller';
-import { Post, Put } from '../../../decorators/Methods';
+import { Delete, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { ProductRepository } from '../../../library/repository';
@@ -103,5 +103,40 @@ export class ProductController extends BaseController {
 
         const parsedProduct = { ...product, store: { ...store, owner: undefined } };
         return RouteResponse.success(res, parsedProduct);
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/product/{productId}:
+     *   delete:
+     *     summary: Deletando um produto
+     *     tags: [Product]
+     *     description: Deletando um produto vinculado a uma loja
+     *     security:
+     *      - BearerAuth: []
+     *     parameters:
+     *     - in: path
+     *       name: storeId
+     *       required: true
+     *       schema:
+     *         type: string
+     *     - in: path
+     *       name: productId
+     *       required: true
+     *       schema:
+     *         type: string
+     *     responses:
+     *       204:
+     *         $ref: '#/components/responses/SuccessEmpty204'
+     */
+    @Delete('/:productId')
+    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
+    @Middlewares(StoreValidator.onlyId, ProductValidator.onlyId)
+    public async deleteProduct(req: Request, res: Response): Promise<void> {
+        const { productId } = req.body;
+
+        await new ProductRepository().softDelete(productId);
+
+        return RouteResponse.successEmpty(res);
     }
 }

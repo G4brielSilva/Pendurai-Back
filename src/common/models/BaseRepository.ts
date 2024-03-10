@@ -43,6 +43,14 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
 
             return this.findById(id) as Promise<T>;
         }
+
+        public async softDelete(id: any): Promise<T> {
+            const register = (await this.findById(id)) as T & { deletedAt: Date };
+
+            register.deletedAt = new Date() as any;
+
+            return this.repository.save(register);
+        }
     }
     return GenericBaseRepository;
 };

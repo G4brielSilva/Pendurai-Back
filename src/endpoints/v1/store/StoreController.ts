@@ -176,7 +176,7 @@ export class StoreController extends BaseController {
     public async softDeleteStore(req: Request, res: Response): Promise<void> {
         const { storeId } = req.body;
 
-        await new StoreRepository().softDeleteStore(storeId);
+        await new StoreRepository().softDelete(storeId);
         RouteResponse.successEmpty(res);
     }
 }
