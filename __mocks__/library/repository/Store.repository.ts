@@ -50,7 +50,7 @@ export class StoreRepository {
         return this.mockList[0];
     }
 
-    public async softDeleteStore(storeId: string): Promise<void> {
+    public async softDelete(storeId: string): Promise<void> {
         return Promise.resolve();
     }
 }

@@ -25,4 +25,8 @@ export class ProductRepository {
     public async update(id: string, store: DeepPartial<Product>): Promise<Product> {
         return this.mockList[0];
     }
+
+    public async softDelete(id: string): Promise<Product> {
+        return this.mockList[0];
+    }
 }
