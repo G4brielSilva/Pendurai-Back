@@ -11,6 +11,14 @@ export class StoreRepository {
             owner: {
                 id: 'valid_user_id'
             }
+        },
+        {
+            id: '2',
+            name: 'other_store_name',
+            cnpj: '62781317000161',
+            owner: {
+                id: 'valid_user_id'
+            }
         }
     ] as unknown as Store[];
 

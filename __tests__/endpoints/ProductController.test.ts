@@ -35,21 +35,12 @@ describe('ProductController', () => {
             description: 'valid_product_description'
         }
 
-        it('should return 401 if an unauthorized User was tryied to create a Product in a Store', async () => {
+        it('should return 401 if an unauthorized User was tried to create a Product in a Store', async () => {
             const response = await request(app).post(URL).send({
                 ...validProductCredentials
             }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
 
             expect(response.status).toBe(401);
-        });
-
-        it('should return 400 if an invalid storeId was provided', async () => {
-            const response = await request(app).post(URL).send({
-                ...validProductCredentials,
-                name: 'nm'
-            }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
-
-            expect(response.status).toBe(400);
         });
 
         it('should return 400 if an invalid name was provided', async () => {
@@ -63,7 +54,53 @@ describe('ProductController', () => {
 
         it('should return 200 if valid email and password was provided', async () => {
             const response = await request(app).post(URL).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
-            console.log(response.body);
+
+            expect(response.status).toBe(200);
+        });
+    });
+
+    describe('PUT - updateProduct', () => {
+        const URL = '/api/store/1/product';
+
+        const validProductCredentials = {
+            name: 'valid_product_name',
+            description: 'valid_product_description'
+        }
+
+        it('should return 401 if an unauthorized User was tried to update a Product in a Store', async () => {
+            const response = await request(app).put(`${URL}/1`).send({
+                ...validProductCredentials
+            }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 401 if an User was tried to update a Product from another Store', async () => {
+            const response = await request(app).put(`/api/store/2/product/1`).send({
+                ...validProductCredentials
+            }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 400 if an invalid productId was provided', async () => {
+            const response = await request(app).put(`${URL}/invalid_product_id`).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 400 if an invalid name was provided', async () => {
+            const response = await request(app).put(`${URL}/1`).send({
+                ...validProductCredentials,
+                name: 'nm'
+            }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 200 if valid email and password was provided', async () => {
+            const response = await request(app).put(`${URL}/1`).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
             expect(response.status).toBe(200);
         });
     });
