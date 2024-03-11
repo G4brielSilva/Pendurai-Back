@@ -208,8 +208,11 @@ export class StoreController extends BaseController {
     @Middlewares(StoreValidator.onlyId)
     public async getStoreStock(req: Request, res: Response): Promise<void> {
         const { storeId } = req.body;
+
         const stock = await new StockRepository().getStoreStock(storeId, StoreController.getListParams(req));
-        return RouteResponse.success(res, { stock });
+        const parsedStock = stock.map(item => ({ ...item, store: undefined }));
+
+        return RouteResponse.success(res, { stock: parsedStock });
     }
 
     /**
@@ -241,7 +244,10 @@ export class StoreController extends BaseController {
     @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId)
     public async getStoreItem(req: Request, res: Response): Promise<void> {
         const { storeItemId } = req.body;
+
         const item = await new StockRepository().findById(storeItemId);
-        return RouteResponse.success(res, { item });
+        const parsedItem = { ...item, store: undefined };
+
+        return RouteResponse.success(res, { item: parsedItem });
     }
 }
