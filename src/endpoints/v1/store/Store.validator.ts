@@ -3,7 +3,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
-import { StoreRepository } from '../../../library/repository';
+import { StockRepository, StoreRepository } from '../../../library/repository';
 
 export class StoreValidator extends BaseValidator {
     /**
@@ -88,6 +88,23 @@ export class StoreValidator extends BaseValidator {
         if (store?.owner.id !== userId && role !== EnumRoles.ADMIN) return RouteResponse.unauthorized(res);
 
         req.body.storeId = storeId;
+        return next();
+    }
+
+    /**
+     * onlyStoreItemId - Verifica se o id de storeItem passado no path é válido e corresponde a Store recebida
+     */
+    public static async onlyStoreItemId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { storeItemId } = req.params;
+
+        const storeItem = await new StockRepository().findById(storeItemId);
+        if (!storeItem) return RouteResponse.badRequest(res, 'invalid StoreId');
+
+        const { storeId } = req.body;
+
+        if (storeItem.store.id !== storeId) return RouteResponse.unauthorized(res);
+
+        req.body.storeItemId = storeItemId;
         return next();
     }
 }

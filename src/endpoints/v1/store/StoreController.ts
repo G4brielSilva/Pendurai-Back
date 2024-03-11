@@ -6,7 +6,7 @@ import { Controller } from '../../../decorators/Controller';
 import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
-import { StoreRepository } from '../../../library/repository';
+import { StockRepository, StoreRepository } from '../../../library/repository';
 import { StoreValidator } from './Store.validator';
 
 @Controller('/store')
@@ -178,5 +178,70 @@ export class StoreController extends BaseController {
 
         await new StoreRepository().softDelete(storeId);
         RouteResponse.successEmpty(res);
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/stock:
+     *   get:
+     *     summary: Listagem do Estoque de uma Loja
+     *     tags: [Store]
+     *     description: Listagem do Estoque de uma Loja vinculada ao usuário
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - $ref: '#/components/parameters/page'
+     *       - $ref: '#/components/parameters/size'
+     *       - $ref: '#/components/parameters/order'
+     *       - $ref: '#/components/parameters/orderBy'
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Get('/:storeId/stock')
+    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Middlewares(StoreValidator.onlyId)
+    public async getStoreStock(req: Request, res: Response): Promise<void> {
+        const { storeId } = req.body;
+        const stock = await new StockRepository().getStoreStock(storeId, StoreController.getListParams(req));
+        return RouteResponse.success(res, { stock });
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/stock/{storeItemId}:
+     *   get:
+     *     summary: Listagem de um Item do Estoque de uma Loja
+     *     tags: [Store]
+     *     description: Listagem de um Item do Estoque de uma Loja vinculada ao usuário
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: path
+     *         name: storeItemId
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Get('/:storeId/stock/:storeItemId')
+    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId)
+    public async getStoreItem(req: Request, res: Response): Promise<void> {
+        const { storeItemId } = req.body;
+        const item = await new StockRepository().findById(storeItemId);
+        return RouteResponse.success(res, { item });
     }
 }
