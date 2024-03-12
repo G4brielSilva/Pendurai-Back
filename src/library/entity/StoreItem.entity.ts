@@ -8,7 +8,7 @@ export class StoreItem {
     id: string;
 
     @Column({ type: 'int', unsigned: true })
-    quantity: string;
+    quantity: number;
 
     @Column({ type: 'float', unsigned: true })
     value: number;
