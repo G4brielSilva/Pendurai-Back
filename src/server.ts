@@ -1,4 +1,6 @@
+import swaggerJSDoc from 'swagger-jsdoc';
 import { dataSource } from './config/database';
+import { swaggerConfig } from './config/swagger';
 
 dataSource
     .initialize()
@@ -8,3 +10,5 @@ dataSource
         console.log('Migration has been run');
     })
     .catch(error => console.error('Error initializing database:', error));
+
+swaggerJSDoc(swaggerConfig);
