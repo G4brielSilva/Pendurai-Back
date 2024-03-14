@@ -19,7 +19,7 @@ export class Authentication {
     @Column({ type: 'boolean', default: false })
     admin: boolean;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, { eager: true })
     @JoinColumn()
     user: User;
 

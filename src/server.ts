@@ -1,14 +1,17 @@
-import swaggerJSDoc from 'swagger-jsdoc';
+import { App } from './config/App';
 import { dataSource } from './config/database';
 import { swaggerConfig } from './config/swagger';
+import { v1 } from './endpoints/v1';
+import { EnvUtils } from './utils/EnvUtils';
 
-dataSource
-    .initialize()
-    .then(async () => {
-        console.log('Database has been initialized');
-        await dataSource.runMigrations();
-        console.log('Migration has been run');
-    })
-    .catch(error => console.error('Error initializing database:', error));
+const app = new App({
+    port: Number(process.env.API_PORT || 8080),
+    controllers: [...v1],
+    middlewares: [],
+    assets: EnvUtils.isDevelopment() ? [{ route: '/test', dir: './coverage/lcov-report' }] : undefined,
+    docs: EnvUtils.isDevelopment(),
+    swaggerConfig,
+    dataSource
+});
 
-swaggerJSDoc(swaggerConfig);
+app.start();

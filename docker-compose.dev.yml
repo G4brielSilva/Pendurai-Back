@@ -7,10 +7,12 @@ services:
         restart: always
         env_file:
             - .env/pendurai_api.env
+        environment:
+            - NODE_ENV=development
         volumes:
             - .:/app
         ports:
-            - "3000:3000"
+            - "4444:8080"
         networks:
             - pendurai-network
         command: npm start

@@ -5,3 +5,5 @@ coverage
 package-lock.json
 .tool-versions
 db
+jest
+docs

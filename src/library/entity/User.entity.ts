@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Authentication } from './Authentication.entity';
 
 @Entity()
@@ -9,7 +9,7 @@ export class User {
     @Column({ type: 'varchar', length: 255 })
     name: string;
 
-    @OneToMany(() => Authentication, authentication => authentication.user)
+    @OneToOne(() => Authentication, (authentication: Authentication) => authentication.user)
     authentication: Authentication;
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { Authentication, User } from '../entity';
+import { Authentication, User } from '../src/library/entity';
 
 export class AddAdminAndAuthentication1706905322061 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -14,7 +14,7 @@ export class AddAdminAndAuthentication1706905322061 implements MigrationInterfac
         authentication.user = user;
         authentication.admin = true;
 
-        await authentication.hashPassword();
+        // await authentication.hashPassword();
         await queryRunner.manager.insert(Authentication, authentication);
     }
 

@@ -6,15 +6,37 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
         info: {
             title: 'Penduraí API',
             description: 'Endpoints do projeto Penduraí.',
-            version: '1.0.0'
+            version: '1.2.0'
         },
-        host: 'localhost:3000',
+        host: 'localhost:8080',
         tags: [],
         externalDocs: {
             description: 'View swagger.json',
             url: '../swagger.json'
         },
         components: {
+            responses: {
+                Success200: {
+                    description: 'Sucesso',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    message: {
+                                        type: 'string',
+                                        description: 'Mensagem de sucesso'
+                                    },
+                                    data: {
+                                        type: 'object',
+                                        description: 'Dados retornados pela requisição'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             securitySchemes: {
                 BearerAuth: {
                     in: 'header',

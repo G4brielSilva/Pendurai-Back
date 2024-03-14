@@ -4,7 +4,7 @@
         "target": "ES6",
         "module": "commonjs",
         "outDir": "./dist",
-        "rootDir": "./src",
+        "rootDir": "./", // Alterado para o diretório que contém tanto 'src' quanto 'jest'
         "removeComments": false,
         "resolveJsonModule": true,
         "strict": true,
@@ -17,29 +17,6 @@
         "emitDecoratorMetadata": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "paths": {
-            "@root/*": [
-                "./src/*"
-            ],
-            "@modules/*": [
-                "./src/modules/*"
-            ],
-            "@libray/*": [
-                "./src/libray/*"
-            ],
-            "@models/*": [
-                "./src/models/*"
-            ],
-            "@routes/*": [
-                "./src/routes/*"
-            ],
-            "@utils/*": [
-                "./src/utils/*"
-            ],
-            "@decorators/*": [
-                "./src/decorators/*"
-            ]
-        }
     },
     "exclude": [
         "node_modules",
@@ -49,6 +26,7 @@
     ],
     "include": [
         "src/**/*",
-        "setEnvVars.ts"
+        "jest/setEnvVars.ts",
+        "jest"
     ]
 }
