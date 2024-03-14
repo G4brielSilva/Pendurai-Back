@@ -11,7 +11,7 @@
         "lint": "eslint ./src/ --ext .ts",
         "lint:fix": "eslint ./src/ --ext .ts --fix",
         "build:docs": "npm run build && npm run docs",
-        "dev": "nodemon -L",
+        "start": "nodemon -L",
         "docs": "typedoc",
         "prepare": "husky install"
     },
