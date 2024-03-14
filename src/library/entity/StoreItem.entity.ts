@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from './Product.entity';
 import { Store } from './Store.entity';
 
@@ -13,11 +13,11 @@ export class StoreItem {
     @Column({ type: 'float', unsigned: true })
     value: number;
 
-    @OneToOne(() => Store, { eager: true })
+    @ManyToOne(() => Store, { eager: true })
     @JoinColumn()
     store: Store;
 
-    @OneToOne(() => Store, { eager: true })
+    @ManyToOne(() => Product, { eager: true })
     @JoinColumn()
     product: Product;
 }

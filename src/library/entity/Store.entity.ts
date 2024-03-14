@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from './User.entity';
 
 @Entity('stores')
@@ -12,12 +12,9 @@ export class Store {
     @Column({ type: 'varchar', length: 14, unique: true })
     cnpj: string;
 
-    @OneToOne(() => User, { eager: true })
+    @ManyToOne(() => User, { eager: true })
     @JoinColumn()
     owner: User;
-
-    // @ManyToOne(() => Product, (product: Product) => product.store)
-    // products: Product[];
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;

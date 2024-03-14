@@ -8,13 +8,14 @@ import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { Product, Store } from '../../../library/entity';
 import { ProductRepository, StockRepository, StoreRepository } from '../../../library/repository';
+import { StoreValidator } from '../store/Store.validator';
 import { ProductValidator } from './Product.validator';
 
 @Controller('/product')
 export class ProductController extends BaseController {
     /**
      * @swagger
-     * /api/store/product:
+     * /api/product/{storeId}:
      *   post:
      *     summary: Criando um produto
      *     tags: [Product]
@@ -44,9 +45,9 @@ export class ProductController extends BaseController {
      *       200:
      *         $ref: '#/components/responses/Success200'
      */
-    @Post()
+    @Post('/:storeId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(ProductValidator.productData())
+    @Middlewares(StoreValidator.onlyId, ProductValidator.productData())
     public async createProduct(req: Request, res: Response): Promise<void> {
         const { storeId, name, description } = req.body;
 
@@ -60,7 +61,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/product:
+     * /api/product:
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
@@ -91,7 +92,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/product/{productId}:
+     * /api/product/{productId}:
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
@@ -126,7 +127,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/product/{productId}:
+     * /api/product/{productId}:
      *   put:
      *     summary: Editando um produto
      *     tags: [Product]
@@ -174,7 +175,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/product/{productId}:
+     * /api/product/{productId}:
      *   delete:
      *     summary: Deletando um produto
      *     tags: [Product]
