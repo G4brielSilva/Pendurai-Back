@@ -6,7 +6,8 @@ export class RouteResponse {
         return {
             status,
             date: new Date().toISOString(),
-            data
+            data: status ? data : undefined,
+            error: status ? undefined : data
         };
     }
 

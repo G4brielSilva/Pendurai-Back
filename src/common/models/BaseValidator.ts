@@ -10,7 +10,7 @@ export class BaseValidator {
             (req, res, next): void => {
                 const errors = validationResult(req);
 
-                if (!errors.isEmpty) return RouteResponse.badRequest(res, errors);
+                if (!errors.isEmpty()) return RouteResponse.badRequest(res, errors.array());
                 next();
             }
         ];

@@ -5,6 +5,7 @@ import { v1 } from './endpoints/v1';
 import { EnvUtils } from './utils/EnvUtils';
 
 const app = new App({
+    path: '/api',
     port: Number(process.env.API_PORT || 8080),
     controllers: [...v1],
     middlewares: [],
