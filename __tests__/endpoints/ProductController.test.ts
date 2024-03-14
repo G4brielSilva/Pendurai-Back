@@ -32,17 +32,34 @@ const AUTHORIZED_USER_TOKEN = 'ADMIN_VALID_TOKEN';
 
 describe('ProductController', () => {
     describe('POST - createProduct', () => {
-        const URL = '/api/product';
+        const URL = '/api/product/1';
 
         const validProductCredentials = {
             name: 'valid_product_name',
             description: 'valid_product_description'
         }
 
+        it('should return 401 if an unauthorized User was tried to create a Product from other Store', async () => {
+            const response = await request(app).post('/api/product/2').send({
+                ...validProductCredentials
+            }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 400 if an invalid storeId was provided', async () => {
+            const response = await request(app).post('/api/product/invalid_store_id').send({
+                ...validProductCredentials,
+                name: 'nm'
+            }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+
+            expect(response.status).toBe(400);
+        });
+
         it('should return 401 if an unauthorized User was tried to create a Product', async () => {
             const response = await request(app).post(URL).send({
                 ...validProductCredentials
-            });
+            }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
 
             expect(response.status).toBe(401);
         });
@@ -74,7 +91,7 @@ describe('ProductController', () => {
 
         it('should return 200 if valid email and password was provided', async () => {
             const response = await request(app).get(URL).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
-            console.log(response.body);
+
             expect(response.status).toBe(200);
         });
     });
