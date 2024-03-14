@@ -60,7 +60,7 @@ describe('AuthenticationController', () => {
                 ...validLoginCredentials,
                 email: 'deleted_user_email@email.com'
             });
-
+            console.log(response.body)
             expect(response.status).toBe(400);
         });
 
