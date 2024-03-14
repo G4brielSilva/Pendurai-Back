@@ -22,7 +22,8 @@ export class AuthenticationValidator extends BaseValidator {
 
                         req.body.authentication = authentication;
                         return Promise.resolve();
-                    }
+                    },
+                    errorMessage: 'Email is not registered'
                 }
             },
             password: {
@@ -46,6 +47,81 @@ export class AuthenticationValidator extends BaseValidator {
 
                         return Promise.resolve();
                     }
+                },
+                errorMessage: 'Credentials are invalid'
+            }
+        });
+    }
+
+    /**
+     * forgotPassword
+     * @return { Array<RequestHandler> }
+     */
+    public static forgotPassword(): Array<RequestHandler> {
+        return AuthenticationValidator.validationList({
+            email: {
+                in: 'body',
+                isEmail: true,
+                custom: {
+                    options: async (email: string): Promise<void> => {
+                        const authentication = await new AuthenticationRepository().findByEmail(email);
+
+                        if (!authentication || authentication.user.deletedAt) return Promise.reject();
+                        return Promise.resolve();
+                    },
+                    errorMessage: 'Email is not registered'
+                },
+                errorMessage: 'Credentials are invalid'
+            }
+        });
+    }
+
+    /**
+     * forgotPassword
+     * @return { Array<RequestHandler> }
+     */
+    public static changePassword(): Array<RequestHandler> {
+        return AuthenticationValidator.validationList({
+            email: {
+                in: 'body',
+                isEmail: true,
+                custom: {
+                    options: async (email: string, { req }): Promise<void> => {
+                        const authentication = await new AuthenticationRepository().findByEmail(email);
+
+                        if (!authentication || authentication.user.deletedAt) return Promise.reject();
+
+                        req.body.authentication = authentication;
+                        return Promise.resolve();
+                    },
+                    errorMessage: 'Email is not registered'
+                },
+                errorMessage: 'Credentials are invalid'
+            },
+            recoveryCode: {
+                in: 'body',
+                isString: true,
+                isLength: { options: { min: 6, max: 6 } },
+                custom: {
+                    options: async (recoveryCode: string, { req }): Promise<void> => {
+                        const isValid = await Password.recoveryCodeIsValid(req.body.email, recoveryCode);
+
+                        return isValid ? Promise.resolve() : Promise.reject();
+                    }
+                },
+                errorMessage: 'Invalid recoveryCode'
+            },
+            newPassword: {
+                in: 'body',
+                isString: true,
+                isLength: {
+                    options: { min: 8, max: 32 },
+                    errorMessage: 'Credentials are invalid'
+                },
+                matches: {
+                    options: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]*$/], // Senha com pelo menos 8 caracteres; um caracter especial; um caracter maiusculo; um caracter minusculo; um número
+                    errorMessage:
+                        'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
                 },
                 errorMessage: 'Credentials are invalid'
             }

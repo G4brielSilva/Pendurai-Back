@@ -4,20 +4,30 @@ import { App } from '../../src/config/App';
 import { v1 } from '../../src/endpoints/v1';
 import { Password } from '../../src/utils/Password';
 
-// Authentication repository mock
+// Repositories mock
 jest.mock('../../src/library/repository/Authentication.repository', () => {
     return jest.requireActual('../../__mocks__/library/repository/Authentication.repository');
 });
 
-// User repository mock
 jest.mock('../../src/library/repository/User.repository', () => {
     return jest.requireActual('../../__mocks__/library/repository/User.repository');
 });
 
-// JWT mock
+// Third-Party mock
 jest.mock('../../src/third-party/Jwt', () => {
     return jest.requireActual('../../__mocks__/third-party/Jwt');
 });
+
+// Utils mock
+jest.mock('../../src/utils/Email', () => {
+    return jest.requireActual('../../__mocks__/utils/Email');
+});
+
+jest.mock('../../src/utils/Password', () => {
+    return jest.requireActual('../../__mocks__/utils/Password');
+});
+
+
 
 const app = new App({
     path: '/api',
@@ -107,6 +117,65 @@ describe('AuthenticationController', () => {
             const response = await request(app).post(URL).set('Authorization', `Bearer ${validToken}`);
 
             expect(response.status).toBe(204);
+        });
+    });
+
+    describe('POST - forgot-password', () => {
+        const URL = '/api/auth/forgot-password';
+        const validBody = {
+            email: 'valid_email@email.com'
+        };
+
+        it('should return 400 if an invalid email was provided', async () => {
+            const response = await request(app).post(URL).send({ email: 'invalid_email'});
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 400 if a valid email was provided but the user was delected', async () => {
+            const response = await request(app).post(URL).send({ email: 'deleted_user_email@email.com'});
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 204 if an valid email was provided', async () => {
+            const response = await request(app).post(URL).send(validBody);
+
+            expect(response.status).toBe(204);
+        });
+    });
+
+    describe('PUT - change-password', () => {
+        const URL = '/api/auth/change-password';
+
+        const validBody = {
+            email: 'valid_email@email.com',
+            recoveryCode: 'ABCDEF',
+            newPassword: 'P@2sw0rd'
+        };
+
+        it('should return 400 if an invalid email was provided', async () => {
+            const response = await request(app).put(URL).send({ ...validBody, email: 'invalid_email'});
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 400 if an invalid recoveryCode was provided', async () => {
+            const response = await request(app).put(URL).send({ ...validBody, recoveryCode: 'invalid_recoveryCode'});
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 400 if an invalid newPassword was provided', async () => {
+            const response = await request(app).put(URL).send({ ...validBody, newPassword: 'invalid_newPassword'});
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 200 if an valid body was provided', async () => {
+            const response = await request(app).put(URL).send(validBody);
+
+            expect(response.status).toBe(200);
         });
     });
 
