@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { JWT } from '../../__mocks__/third-party/Jwt';
 import { App } from '../../src/config/App';
 import { v1 } from '../../src/endpoints/v1';
 import { Password } from '../../src/utils/Password';
@@ -60,7 +61,7 @@ describe('AuthenticationController', () => {
                 ...validLoginCredentials,
                 email: 'deleted_user_email@email.com'
             });
-            console.log(response.body)
+
             expect(response.status).toBe(400);
         });
 
@@ -81,6 +82,31 @@ describe('AuthenticationController', () => {
             const response = await request(app).post(URL).send(validLoginCredentials);
 
             expect(response.status).toBe(200);
+        });
+    });
+
+    describe('POST - logout', () => {
+        const URL = '/api/auth/logout';
+        const validToken = 'AN_VALID_TOKEN';
+
+        it('should return 400 if an invalid token was provided', async () => {
+            const response = await request(app).post(URL).set('Authorization', 'Bearer Invalid_token');
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 500 if an error occurred in token deactivation', async () => {
+            jest.spyOn(JWT, 'deactiveToken').mockRejectedValueOnce(new Error('Mocked error on token deactivating'));
+
+            const response = await request(app).post(URL).set('Authorization', `Bearer ${validToken}`);
+
+            expect(response.status).toBe(500);
+        });
+
+        it('should return 204 if the token was successfull deactivated', async () => {
+            const response = await request(app).post(URL).set('Authorization', `Bearer ${validToken}`);
+
+            expect(response.status).toBe(204);
         });
     });
 

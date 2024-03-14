@@ -16,28 +16,33 @@ export class RoutesSetup {
                 const middlewares = Reflect.getMetadata('middlewares', property) || [];
 
                 const roles = Reflect.getMetadata('roles', property);
-                const rolesMiddlewares = RoutesSetup.getRolesMiddlewares(roles);
+                const rolesMiddleware = RoutesSetup.getRolesMiddlewares(roles);
 
                 const path = Reflect.getMetadata('path', property);
                 const method: string = Reflect.getMetadata('method', property);
 
-                (router[method as keyof Router] as Function)(constructor.prototype.baseRoute + path, ...rolesMiddlewares, ...middlewares, property);
+                (router[method as keyof Router] as Function)(constructor.prototype.baseRoute + path, rolesMiddleware, ...middlewares, property);
             }
         }
 
         return router;
     }
 
-    private static getRolesMiddlewares(roles: string[]): any[] {
-        return roles.map(role => {
-            return (req: Request, res: Response, next: NextFunction) => {
+    private static getRolesMiddlewares(roles: string[]): any {
+        if (roles.length === 0) return (req: Request, res: Response, next: NextFunction) => next();
+
+        return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+            try {
                 const token = req.headers.authorization?.split(' ')[1];
-                const result = JWT.decodeToken(token as string);
+                const result = await JWT.decodeToken(token as string);
 
-                if (!result && !result?.roles.includes(role)) RouteResponse.unauthorized('Unauthorized', res);
+                if (result?.error) return RouteResponse.badRequest(res, result.error);
+                if (!result || !roles.includes(result?.role)) return RouteResponse.unauthorized('Unauthorized', res);
 
-                next();
-            };
-        });
+                return next();
+            } catch (error: Error | any) {
+                return RouteResponse.serverError(error.message, res);
+            }
+        };
     }
 }
