@@ -1,0 +1,7 @@
+{
+    "entryPointStrategy": "expand",
+    "entryPoints": ["./src"],
+    "theme": "default",
+    "darkHighlightTheme": "dark-plus",
+    "out": "./docs"
+}

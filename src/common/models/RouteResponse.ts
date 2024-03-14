@@ -42,4 +42,10 @@ export class RouteResponse {
     public static serverError(error: string | any, res: Response): void {
         res.status(500).send(RouteResponse.setResponse(error, false));
     }
+
+    public static setCache(minutes: number, res: Response): void {
+        // em modo dev o tempo de cache máximo é 1 minuto apenas para teste
+        const time: number = process.env.NODE_ENV === 'development' ? 1 : minutes;
+        res.set('Cache-Control', `public, max-age=${time * 60}, s-maxage=${time * 60}`);
+    }
 }

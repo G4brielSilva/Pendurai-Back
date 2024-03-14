@@ -36,7 +36,6 @@ services:
             - .env/redis.env
         networks:
             - pendurai-network
-
 networks:
     pendurai-network:
         driver: bridge
