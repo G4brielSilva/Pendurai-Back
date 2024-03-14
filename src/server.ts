@@ -2,6 +2,7 @@ import { App } from './config/App';
 import { dataSource } from './config/database';
 import { swaggerConfig } from './config/swagger';
 import { v1 } from './endpoints/v1';
+import { Logger } from './middlewares/Logger';
 import { EnvUtils } from './utils/EnvUtils';
 
 const app = new App({
@@ -12,7 +13,8 @@ const app = new App({
     assets: EnvUtils.isDevelopment() ? [{ route: '/test', dir: './coverage/lcov-report' }] : undefined,
     docs: EnvUtils.isDevelopment(),
     swaggerConfig,
-    dataSource
+    dataSource,
+    logger: Logger
 });
 
 app.start();
