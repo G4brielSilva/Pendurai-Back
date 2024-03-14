@@ -3,7 +3,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
-import { StoreRepository } from '../../../library/repository';
+import { StockRepository, StoreRepository } from '../../../library/repository';
 
 export class StoreValidator extends BaseValidator {
     /**
@@ -59,6 +59,8 @@ export class StoreValidator extends BaseValidator {
                         result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
                         if (result !== Number(verifiersDigits.charAt(1))) return Promise.reject();
 
+                        // Verifing if cnpj already exists in the system
+
                         const store = await new StoreRepository().findStoreByCnpj(cnpj);
 
                         // eslint-disable-next-line prefer-promise-reject-errors
@@ -79,7 +81,6 @@ export class StoreValidator extends BaseValidator {
         const { storeId } = req.params;
 
         const store = await new StoreRepository().findById(storeId);
-
         if (!store) return RouteResponse.badRequest(res, 'invalid StoreId');
 
         const { role, userId } = req.body.authentication;
@@ -87,6 +88,23 @@ export class StoreValidator extends BaseValidator {
         if (store?.owner.id !== userId && role !== EnumRoles.ADMIN) return RouteResponse.unauthorized(res);
 
         req.body.storeId = storeId;
+        return next();
+    }
+
+    /**
+     * onlyStoreItemId - Verifica se o id de storeItem passado no path é válido e corresponde a Store recebida
+     */
+    public static async onlyStoreItemId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { storeItemId } = req.params;
+
+        const storeItem = await new StockRepository().findById(storeItemId);
+        if (!storeItem) return RouteResponse.badRequest(res, 'invalid StoreId');
+
+        const { storeId } = req.body;
+
+        if (storeItem.store.id !== storeId) return RouteResponse.unauthorized(res);
+
+        req.body.storeItemId = storeItemId;
         return next();
     }
 }

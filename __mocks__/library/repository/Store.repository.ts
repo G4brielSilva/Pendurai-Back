@@ -11,6 +11,14 @@ export class StoreRepository {
             owner: {
                 id: 'valid_user_id'
             }
+        },
+        {
+            id: '2',
+            name: 'other_store_name',
+            cnpj: '62781317000161',
+            owner: {
+                id: 'valid_user_id'
+            }
         }
     ] as unknown as Store[];
 
@@ -42,7 +50,7 @@ export class StoreRepository {
         return this.mockList[0];
     }
 
-    public async softDeleteStore(storeId: string): Promise<void> {
+    public async softDelete(storeId: string): Promise<void> {
         return Promise.resolve();
     }
 }

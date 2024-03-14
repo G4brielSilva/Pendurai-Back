@@ -1,4 +1,4 @@
-import request from 'supertest';
+ import request from 'supertest';
 import { App } from '../../src/config/App';
 import { v1 } from '../../src/endpoints/v1';
 import { JWT } from '../../src/third-party/Jwt';

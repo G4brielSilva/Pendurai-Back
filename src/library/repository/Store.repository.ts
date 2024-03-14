@@ -57,14 +57,4 @@ export class StoreRepository extends BaseRepository(Store) {
 
         return this.repository.findAndCount(options);
     }
-
-    /**
-     * softDeleteStore - Soft Delete Store
-     *
-     * @param { string } storeId
-     * @returns { Promise<void> }
-     */
-    public async softDeleteStore(storeId: string): Promise<void> {
-        this.repository.update(storeId, { deletedAt: new Date() });
-    }
 }

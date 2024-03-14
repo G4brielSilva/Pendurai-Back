@@ -1,23 +1,20 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { User } from './User.entity';
+import { Store } from './Store.entity';
 
-@Entity('stores')
-export class Store {
+@Entity('products')
+export class Product {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({ type: 'varchar', length: 255 })
     name: string;
 
-    @Column({ type: 'varchar', length: 14, unique: true })
-    cnpj: string;
+    @Column({ type: 'text' })
+    description: string;
 
-    @OneToOne(() => User, { eager: true })
+    @OneToOne(() => Store, { eager: true })
     @JoinColumn()
-    owner: User;
-
-    // @ManyToOne(() => Product, (product: Product) => product.store)
-    // products: Product[];
+    store: Store;
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
