@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
 import { Validations } from '../../../common/models/Validations';
+import { StoreRepository } from '../../../library/repository';
 
-// TODO: adicionar model para poupar repetição de validação
 export class StoreValidator extends BaseValidator {
     /**
      * createStore
@@ -21,6 +21,24 @@ export class StoreValidator extends BaseValidator {
                 errorMessage: 'name is invalid'
             },
             cnpj
+        });
+    }
+
+    public static listStoreById(): Array<RequestHandler> {
+        return StoreValidator.validationList({
+            storeId: {
+                in: 'params',
+                isString: true,
+                custom: {
+                    options: async (storeId: string, { req }): Promise<void> => {
+                        const store = await new StoreRepository().findById(storeId);
+                        req.body.storeId = storeId;
+
+                        return store ? Promise.resolve() : Promise.reject();
+                    }
+                },
+                errorMessage: 'storeId is invalid'
+            }
         });
     }
 }
