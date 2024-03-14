@@ -18,7 +18,7 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
         }
 
         public async find(params: IListParams): Promise<T[]> {
-            const skip = params.size * params.page;
+            const skip = params.size * (params.page - 1);
             const take = params.size;
 
             const options: FindManyOptions<T> = { skip, take };

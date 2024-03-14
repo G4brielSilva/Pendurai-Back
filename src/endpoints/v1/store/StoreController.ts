@@ -3,7 +3,7 @@ import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Controller';
-import { Get, Post, Put } from '../../../decorators/Methods';
+import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { StoreRepository } from '../../../library/repository';
@@ -55,9 +55,9 @@ export class StoreController extends BaseController {
      * @swagger
      * /api/store/{storeId}:
      *   put:
-     *     summary: Listagem de Lojas
+     *     summary: Edição de dados de uma Loja
      *     tags: [Store]
-     *     description: Listagem de Lojas vinculadas ao usuário
+     *     description: Edição de dados de uma Loja vinculada ao usuário
      *     security:
      *       - BearerAuth: []
      *     parameters:
@@ -98,9 +98,9 @@ export class StoreController extends BaseController {
      * @swagger
      * /api/store/{storeId}:
      *   get:
-     *     summary: Listagem de Lojas
+     *     summary: Listagem de uma Loja específica
      *     tags: [Store]
-     *     description: Listagem de Lojas vinculadas ao usuário
+     *     description: Listagem de uma Loja específica vinculadas ao usuário
      *     security:
      *       - BearerAuth: []
      *     parameters:
@@ -118,9 +118,9 @@ export class StoreController extends BaseController {
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
     @Middlewares(StoreValidator.onlyId)
     public async onlyId(req: Request, res: Response): Promise<void> {
-        const { storeId } = req.body;
+        const { authentication, storeId } = req.body;
 
-        const store = await new StoreRepository().findById(storeId);
+        const store = await new StoreRepository().findStoreById(authentication, storeId);
         return RouteResponse.success(res, store);
     }
 
@@ -128,9 +128,9 @@ export class StoreController extends BaseController {
      * @swagger
      * /api/store:
      *   get:
-     *     summary: Criar de Loja no banco
+     *     summary: Listagem de Lojas
      *     tags: [Store]
-     *     description: Criação de Registro de Loja no banco vinculado ao usuário criador
+     *     description: Lista Lojas vinculadas ao usuário
      *     security:
      *       - BearerAuth: []
      *     parameters:
@@ -145,7 +145,38 @@ export class StoreController extends BaseController {
     @Get()
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
     public async listStores(req: Request, res: Response): Promise<void> {
-        const rows = await new StoreRepository().find(StoreController.getListParams(req));
-        return RouteResponse.success(res, rows);
+        const { authentication } = req.body;
+        const [rows, count] = await new StoreRepository().findStores(authentication, StoreController.getListParams(req));
+        return RouteResponse.success(res, { rows, count });
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}:
+     *   delete:
+     *     summary: Deleção de Lojas
+     *     tags: [Store]
+     *     description: Deleção de Loja vinculada ao usuário
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: Id da loja a ser listada
+     *     responses:
+     *       204:
+     *         $ref: '#/components/responses/SuccessEmpty204'
+     */
+    @Delete('/:storeId')
+    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Middlewares(StoreValidator.onlyId)
+    public async softDeleteStore(req: Request, res: Response): Promise<void> {
+        const { storeId } = req.body;
+
+        await new StoreRepository().softDeleteStore(storeId);
+        RouteResponse.successEmpty(res);
     }
 }

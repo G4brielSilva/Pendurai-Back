@@ -99,7 +99,7 @@ describe('StoreController', () => {
         }
 
         it('should return 400 if an invalid storeId was provided', async () => {
-            const response = await request(app).put(`${URL}/invalid_store_id`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`)
+            const response = await request(app).put(`${URL}/invalid_store_id`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
 
             expect(response.status).toBe(400);
         });
@@ -108,7 +108,7 @@ describe('StoreController', () => {
             const response = await request(app).put(`${URL}/${validStoreId}`).send({
                 ...validStoreCredentials,
                 name: 'nm'
-            }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();;
+            }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();
 
             expect(response.status).toBe(400);
         });
@@ -117,7 +117,7 @@ describe('StoreController', () => {
             const response = await request(app).put(`${URL}/${validStoreId}`).send({
                 ...validStoreCredentials,
                 cnpj: 'invalid_cnpj'
-            }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();;
+            }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();
 
             expect(response.status).toBe(400);
         });
@@ -126,6 +126,29 @@ describe('StoreController', () => {
             const response = await request(app).put(`${URL}/${validStoreId}`).send(validStoreCredentials).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
+        });
+    });
+
+    describe('DEL - softDeleteStore', () => {
+        const URL = '/api/store';
+
+        const validStoreId = '1';
+
+        const validStoreCredentials = {
+            name: 'valid_store_name',
+            cnpj: '62781317000160'
+        }
+
+        it('should return 400 if an invalid storeId was provided', async () => {
+            const response = await request(app).del(`${URL}/invalid_store_id`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 200 if valid storeId was provided', async () => {
+            const response = await request(app).del(`${URL}/${validStoreId}`).send(validStoreCredentials).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+            expect(response.status).toBe(204);
         });
     });
 });
