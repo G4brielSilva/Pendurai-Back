@@ -40,7 +40,7 @@ export class RoutesSetup {
 
                 if (result?.error) return RouteResponse.badRequest(res, result.errorMessage);
                 if (!result || !roles.includes(result?.role)) return RouteResponse.unauthorized('Unauthorized', res);
-
+                req.body.authentication = result;
                 return next();
             } catch (error: Error | any) {
                 return RouteResponse.serverError(error.message, res);
