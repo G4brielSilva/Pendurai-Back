@@ -6,6 +6,7 @@ import { Controller } from '../../../decorators/Controller';
 import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
+import { Store } from '../../../library/entity';
 import { StockRepository, StoreRepository } from '../../../library/repository';
 import { StoreValidator } from './Store.validator';
 
@@ -171,7 +172,7 @@ export class StoreController extends BaseController {
      *         $ref: '#/components/responses/SuccessEmpty204'
      */
     @Delete('/:storeId')
-    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Roles(EnumRoles.ADMIN)
     @Middlewares(StoreValidator.onlyId)
     public async softDeleteStore(req: Request, res: Response): Promise<void> {
         const { storeId } = req.body;
@@ -249,5 +250,56 @@ export class StoreController extends BaseController {
         const parsedItem = { ...item, store: undefined };
 
         return RouteResponse.success(res, { item: parsedItem });
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/stock/{storeItemId}:
+     *   put:
+     *     summary: Atualiza um item de uma Loja
+     *     tags: [Store]
+     *     description: Atualiza um item de uma Loja vinculada ao usuário
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: path
+     *         name: storeItemId
+     *         required: true
+     *         schema:
+     *           type: string
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               quantity:
+     *                 type: number
+     *                 example: 10
+     *               value:
+     *                 type: number
+     *                 example: 19.99
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Put('/:storeId/stock/:storeItemId')
+    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId, StoreValidator.storeItemData())
+    public async updateStoreItem(req: Request, res: Response): Promise<void> {
+        const { storeId, storeItemId: id, quantity, value } = req.body;
+
+        const store = (await new StoreRepository().findById(storeId)) as Store;
+
+        const storeItem = await new StockRepository().update(id, { store, quantity, value });
+
+        const item = { ...storeItem, store: undefined };
+        return RouteResponse.success(res, item);
     }
 }

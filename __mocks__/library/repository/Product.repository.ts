@@ -8,10 +8,7 @@ export class ProductRepository {
         {
             id: '1',
             name: 'valid_product_name',
-            description: 'valid_product_description',
-            store: {
-                id: '1'
-            }
+            description: 'valid_product_description'
         }
     ] as unknown as Product[];
 
