@@ -4,7 +4,7 @@ import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Contoller';
-import { Post, Put } from '../../../decorators/Methods';
+import { Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { PublicRoute, Roles } from '../../../decorators/Roles';
 import { Authentication, User } from '../../../library/entity';
@@ -76,7 +76,7 @@ export class AuthenticationController extends BaseController {
         try {
             const { authorization } = req.headers;
 
-            await JWT.deactiveToken(authorization);
+            await JWT.deactiveToken(authorization as string);
 
             return RouteResponse.successEmpty(res);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,7 +104,7 @@ export class AuthenticationController extends BaseController {
      *                 example: 'email@email.com'
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/Success204'
+     *         $ref: '#/components/responses/SuccessEmpty204'
      */
     @Post('/forgot-password')
     @PublicRoute()
@@ -113,6 +113,31 @@ export class AuthenticationController extends BaseController {
         const { email } = req.body;
 
         await Email.sendForgotPasswordEmail(email);
+        RouteResponse.successEmpty(res);
+    }
+
+    /**
+     * @swagger
+     * /api/auth/verify-recovery-code/{recoveryCode}:
+     *   get:
+     *     summary: Verificação do código de recuperação
+     *     tags: [Authentication]
+     *     description: Verifica se o código de recuperação fornecido é válido
+     *     parameters:
+     *       - in: path
+     *         name: recoveryCode
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: O código de recuperação a ser verificado
+     *     responses:
+     *       204:
+     *         $ref: '#/components/responses/Success2004'
+     */
+    @Get('/verify-recovery-code/:recoveryCode')
+    @PublicRoute()
+    @Middlewares(AuthenticationValidator.verifyRecoveryCode())
+    public async verifyCode(req: Request, res: Response): Promise<void> {
         RouteResponse.successEmpty(res);
     }
 

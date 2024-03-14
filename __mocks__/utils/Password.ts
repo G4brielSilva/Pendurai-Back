@@ -11,7 +11,10 @@ export class Password {
     }
 
     public static async invalidateRecoveryCode(email: string): Promise<boolean> {
-        console.log(email);
         return Promise.resolve(true);
+    }
+
+    public static async createRecoveryCode(email: string): Promise<string> {
+        return Promise.resolve('code');
     }
 }

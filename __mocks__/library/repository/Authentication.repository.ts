@@ -8,6 +8,7 @@ export class AuthenticationRepository {
             email: 'valid_email@email.com',
             password: 'valid_hashed_password',
             salt: '123',
+            admin: true,
             user: {
                 id: 'valid_user_id',
                 deletedAt: null
@@ -28,8 +29,9 @@ export class AuthenticationRepository {
             email: 'registered_account_email@email.com',
             password: 'valid_hashed_password',
             salt: '123',
+            admin: false,
             user: {
-                id: 'deleted_user_id'
+                id: 'registered_user_id'
             }
         }
     ] as unknown as Authentication[];

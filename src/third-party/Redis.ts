@@ -7,7 +7,7 @@ export class Redis {
 
     public constructor() {
         this.client = createClient({
-            url: 'redis://default:anRedisPassword@pendurai-redis:6379' || (process.env.REDIS_URL as string)
+            url: process.env.REDIS_URL as string
         });
     }
 
@@ -75,7 +75,7 @@ export class Redis {
      * @param { string } key
      * @returns { Promise<string | null> } Recupera Token da blacklist
      */
-    public async connectAndgetTokenByBlackList(key: string): Promise<string | null> {
+    public async connectAndGetTokenByBlackList(key: string): Promise<string | null> {
         await this.clientConnect();
 
         const result = await this.getTokenByBlackList(this.createBlackListAuthKey(key));

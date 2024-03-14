@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { JWT } from '../../__mocks__/third-party/Jwt';
 import { App } from '../../src/config/App';
 import { v1 } from '../../src/endpoints/v1';
+import { JWT } from '../../src/third-party/Jwt';
 import { Password } from '../../src/utils/Password';
 
 // Repositories mock
@@ -140,6 +140,23 @@ describe('AuthenticationController', () => {
 
         it('should return 204 if an valid email was provided', async () => {
             const response = await request(app).post(URL).send(validBody);
+
+            expect(response.status).toBe(204);
+        });
+    });
+
+    describe('GET - verify-recovery-code/:recoveryCode', () => {
+        const URL = '/api/auth/verify-recovery-code';
+        const validCode = 'ABC123'
+
+        it('should return 400 if an invalid code was provided', async () => {
+            const response = await request(app).get(`${URL}/invalid_code`);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 204 if an valid email was provided', async () => {
+            const response = await request(app).get(`${URL}/${validCode}`);
 
             expect(response.status).toBe(204);
         });

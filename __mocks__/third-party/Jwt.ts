@@ -4,6 +4,8 @@ import { RouteResponse } from '../../src/common/models/RouteResponse';
 import { EnumRoles } from '../../src/common/models/enum/EnumRoles';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
+const generateAccessTokenFn = jest.fn();
+
 export class JWT {
     public static decodedTokens = {
         AN_VALID_TOKEN: { user: 'AN_VALID_USER', authId: 'AN_VALID_AUTH_ID', role: EnumRoles.USER },
@@ -21,9 +23,9 @@ export class JWT {
         return next();
     }
 
-    public static generateAccessToken(userId: string, authId: string): string {
+    public static generateAccessToken = generateAccessTokenFn.mockImplementation((userId: string, authId: string): string => {
         return 'AN_VALID_TOKEN';
-    }
+    });
 
     public static decodeToken(token: string): any {
         return JWT.decodedTokens[token as keyof typeof JWT.decodedTokens] || { error: 'Invalid Token' };
@@ -33,3 +35,9 @@ export class JWT {
         return Promise.resolve(true);
     }
 }
+
+// eslint-disable-next-line prettier/prettier
+export {
+    generateAccessTokenFn
+};
+

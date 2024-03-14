@@ -12,4 +12,12 @@ export class Redis {
     public async deleteRecoveryCode(email: string): Promise<boolean> {
         return Promise.resolve(true);
     }
+
+    public async addTokenBlackList(token: string): Promise<boolean> {
+        return Promise.resolve(true);
+    }
+
+    public async connectAndGetTokenByBlackList(token: string): Promise<string | null> {
+        return null;
+    }
 }

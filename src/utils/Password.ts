@@ -1,13 +1,13 @@
-import crypto from 'crypto';
+import { Hash } from '../third-party/Hash';
 import { Redis } from '../third-party/Redis';
 
 export class Password {
     public static genSalt(): string {
-        return crypto.randomBytes(16).toString('hex');
+        return Hash.salt(16);
     }
 
     public static hashPassword(password: string, salt: string): string {
-        return crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
+        return Hash.hash(password, salt);
     }
 
     /**
@@ -19,9 +19,7 @@ export class Password {
      * @returns { boolean } Valor que define se a senha é válida ou não
      */
     public static verifyPassword(providedPassword: string, hashedPassword: string, salt: string): boolean {
-        const hash = crypto.pbkdf2Sync(providedPassword, salt, 1000, 64, `sha512`).toString(`hex`);
-
-        return hashedPassword === hash;
+        return hashedPassword === Hash.hash(providedPassword, salt);
     }
 
     /**
