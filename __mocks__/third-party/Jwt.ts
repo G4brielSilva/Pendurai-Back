@@ -15,10 +15,10 @@ export class JWT {
     public static authenticateToken(req: Request, res: Response, next: NextFunction): void {
         const authHeader = req.headers.authorization;
 
-        if (!authHeader) return RouteResponse.unauthorized('Unauthorized', res);
+        if (!authHeader) return RouteResponse.unauthorized(res);
         const token = authHeader.split(' ')[1];
 
-        if (!JWT.decodedTokens[token as keyof typeof JWT.decodedTokens]) return RouteResponse.unauthorized('Unauthorized', res);
+        if (!JWT.decodedTokens[token as keyof typeof JWT.decodedTokens]) return RouteResponse.unauthorized(res);
 
         return next();
     }
