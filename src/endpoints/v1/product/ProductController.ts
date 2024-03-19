@@ -8,6 +8,7 @@ import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { Product, Store } from '../../../library/entity';
 import { ProductRepository, StockRepository, StoreRepository } from '../../../library/repository';
+import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from '../store/Store.validator';
 import { ProductValidator } from './Product.validator';
 
@@ -164,7 +165,7 @@ export class ProductController extends BaseController {
      */
     @Put('/:productId')
     @Roles(EnumRoles.ADMIN)
-    @Middlewares(ProductValidator.onlyId, ProductValidator.productData())
+    @Middlewares(ProductValidator.onlyId, ProductValidator.productData(), ActionLoger.logByRequest)
     public async updateProduct(req: Request, res: Response): Promise<void> {
         const { productId, name, description } = req.body;
 
@@ -199,7 +200,7 @@ export class ProductController extends BaseController {
      */
     @Delete('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(ProductValidator.onlyId)
+    @Middlewares(ProductValidator.onlyId, ActionLoger.logByRequest)
     public async deleteProduct(req: Request, res: Response): Promise<void> {
         const { productId } = req.body;
 

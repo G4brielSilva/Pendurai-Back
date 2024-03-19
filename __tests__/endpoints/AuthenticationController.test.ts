@@ -27,6 +27,10 @@ jest.mock('../../src/utils/Password', () => {
     return jest.requireActual('../../__mocks__/utils/Password');
 });
 
+jest.mock('../../src/utils/ActionLoger', () => {
+    return jest.requireActual('../../__mocks__/utils/ActionLoger');
+});
+
 
 
 const app = new App({

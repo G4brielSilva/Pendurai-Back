@@ -14,3 +14,11 @@ export const dataSource = new DataSource({
     logging: false,
     synchronize: true
 });
+
+export const mongoDataSource = new DataSource({
+    type: 'mongodb',
+    host: process.env.MONGODB_HOST,
+    url: process.env.MONGODB_URL,
+    entities: ['src/library/ActionsLog/*.ts'],
+    synchronize: true
+});
