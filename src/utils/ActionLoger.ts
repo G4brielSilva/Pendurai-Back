@@ -1,33 +1,27 @@
-import { DataSource } from 'typeorm';
+import { NextFunction, Request, Response } from 'express';
+import { TObject } from '../common/models/TObject';
 import { mongoDataSource } from '../config/database';
 import { ActionLog } from '../library/ActionsLog/ActionLog.entity';
 
 export class ActionLoger {
-    private dataSource: DataSource;
-
-    constructor() {
-        this.dataSource = mongoDataSource;
-    }
-
-    private async databaseConnect(): Promise<void> {
-        await this.dataSource.initialize();
-    }
-
-    private async disconnect(): Promise<void> {
-        await this.dataSource.destroy();
-    }
-
-    public async log(path: string, userId: string, oldValue: object, newValue: object, action: 'update' | 'delete'): Promise<void> {
-        await this.databaseConnect();
+    public static async log(path: string, userId: string, action: 'update' | 'delete', data: TObject | undefined = undefined): Promise<void> {
+        await mongoDataSource.initialize();
 
         await mongoDataSource.getMongoRepository(ActionLog).save({
             path,
             userId,
-            oldValue,
-            newValue,
+            data,
             action
         });
 
-        await this.disconnect();
+        await mongoDataSource.destroy();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static async logByRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const action = req.method === 'PUT' ? 'update' : 'delete';
+
+        await ActionLoger.log(req.path, req.body.authentication.userId, action);
+        next();
     }
 }

@@ -12,10 +12,7 @@ export class ActionLog {
     userId: string;
 
     @Column()
-    oldValue: object;
-
-    @Column()
-    newValue: object;
+    data: object;
 
     @Column()
     action: 'update' | 'delete';
