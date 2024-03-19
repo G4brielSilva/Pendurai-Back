@@ -17,6 +17,11 @@ jest.mock('../../src/third-party/Jwt', () => {
     return jest.requireActual('../../__mocks__/third-party/Jwt');
 });
 
+// Utils mock
+jest.mock('../../src/utils/ActionLoger', () => {
+    return jest.requireActual('../../__mocks__/utils/ActionLoger');
+});
+
 const app = new App({
     path: '/api',
     port: process.env.API_PORT as unknown as number,
