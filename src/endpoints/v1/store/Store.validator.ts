@@ -3,7 +3,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
-import { StockRepository, StoreRepository } from '../../../library/repository';
+import { CartRepository, StockRepository, StoreRepository } from '../../../library/repository';
 
 export class StoreValidator extends BaseValidator {
     /**
@@ -98,7 +98,8 @@ export class StoreValidator extends BaseValidator {
         const { storeItemId } = req.params;
 
         const storeItem = await new StockRepository().findById(storeItemId);
-        if (!storeItem || storeItem.store.deletedAt) return RouteResponse.badRequest(res, 'invalid StoreId');
+
+        if (!storeItem || !!storeItem.store.deletedAt) return RouteResponse.badRequest(res, 'invalid StoreItemId');
 
         const { storeId } = req.body;
 
@@ -137,6 +138,43 @@ export class StoreValidator extends BaseValidator {
                     errorMessage: 'value must be a positive number'
                 },
                 errorMessage: 'value is invalid'
+            }
+        });
+    }
+
+    /**
+     * hasCart - Verifica se tem um carrinho vinculado a loja do usuário
+     * @return { Array<RequestHandler> }
+     */
+    public static async hasCart(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { storeId } = req.body;
+
+        const cartRepository = new CartRepository();
+
+        let cart = await cartRepository.findByStoreId(storeId);
+
+        if (!cart) {
+            cart = await cartRepository.create({ store: { id: storeId } });
+        }
+
+        req.body.cartId = cart.id;
+
+        return next();
+    }
+
+    public static storeItemQuantity(): Array<RequestHandler> {
+        return StoreValidator.validationList({
+            quantity: {
+                in: 'body',
+                isNumeric: true,
+                custom: {
+                    options: async (value: number): Promise<void> => {
+                        if (value < 0) return Promise.reject();
+                        return Promise.resolve();
+                    },
+                    errorMessage: 'quantity must be a positive number'
+                },
+                errorMessage: 'quantity is invalid'
             }
         });
     }

@@ -6,8 +6,8 @@ import { Controller } from '../../../decorators/Controller';
 import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
-import { Store } from '../../../library/entity';
-import { StockRepository, StoreRepository } from '../../../library/repository';
+import { ShopCart, Store, StoreItem } from '../../../library/entity';
+import { CartItemRepository, CartRepository, StockRepository, StoreRepository } from '../../../library/repository';
 import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from './Store.validator';
 
@@ -302,5 +302,56 @@ export class StoreController extends BaseController {
 
         const item = { ...storeItem, store: undefined };
         return RouteResponse.success(res, item);
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/cart/add-item/{storeItemId}:
+     *   post:
+     *     summary: Adiciona um item ao Carrinho
+     *     tags: [Store]
+     *     description: Adiciona um item da loja ao carrinho
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: path
+     *         name: storeItemId
+     *         required: true
+     *         schema:
+     *           type: string
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               quantity:
+     *                 type: number
+     *                 example: 10
+     *     responses:
+     *       200:
+     *         $ref: '#/components/responses/Success200'
+     */
+    @Post('/:storeId/cart/add-item/:storeItemId')
+    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId, StoreValidator.storeItemQuantity(), StoreValidator.hasCart)
+    public async addItemToCart(req: Request, res: Response): Promise<void> {
+        const { cartId, storeItemId, quantity } = req.body;
+
+        const cartEntity = (await new CartRepository().findById(cartId)) as ShopCart;
+
+        const storeItemEntity = (await new StockRepository().findById(storeItemId)) as StoreItem;
+
+        await new CartItemRepository().addItemToCart(cartEntity, storeItemEntity, quantity);
+
+        const cart = await new CartRepository().findById(cartId);
+
+        return RouteResponse.success(res, { cart });
     }
 }
