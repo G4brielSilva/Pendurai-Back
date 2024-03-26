@@ -5,7 +5,9 @@ import { CartItem } from '../entity/CartItem.entity';
 export class CartItemRepository extends BaseRepository(CartItem) {
     /**
      * findByStoreId - Busca carrinho por id da loja
-     * @param { string } storeId
+     * @param { ShopCart } cart
+     * @param { StoreItem } storeItem
+     * @param { number } quantity
      * @returns { Promise<CartItem | null> }
      */
     public async addItemToCart(cart: ShopCart, storeItem: StoreItem, quantity: number): Promise<CartItem | null> {
