@@ -243,7 +243,7 @@ export class StoreController extends BaseController {
      */
     @Get('/:storeId/stock/:storeItemId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.storeItemId)
     public async getStoreItem(req: Request, res: Response): Promise<void> {
         const { storeItemId } = req.body;
 
@@ -292,7 +292,7 @@ export class StoreController extends BaseController {
      */
     @Put('/:storeId/stock/:storeItemId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId, StoreValidator.storeItemData(), ActionLoger.logByRequest)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.storeItemId, StoreValidator.storeItemData(), ActionLoger.logByRequest)
     public async updateStoreItem(req: Request, res: Response): Promise<void> {
         const { storeId, storeItemId: id, quantity, value } = req.body;
 
@@ -306,7 +306,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/cart/add-item/{storeItemId}:
+     * /api/store/{storeId}/cart/{storeItemId}:
      *   post:
      *     summary: Adiciona um item ao Carrinho
      *     tags: [Store]
@@ -338,9 +338,9 @@ export class StoreController extends BaseController {
      *       200:
      *         $ref: '#/components/responses/Success200'
      */
-    @Post('/:storeId/cart/add-item/:storeItemId')
+    @Post('/:storeId/cart/:storeItemId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId, StoreValidator.storeItemQuantity(), StoreValidator.hasCart)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.storeItemId, StoreValidator.storeItemQuantity(), StoreValidator.hasCart)
     public async addItemToCart(req: Request, res: Response): Promise<void> {
         const { cartId, storeItemId, quantity } = req.body;
 
@@ -351,7 +351,43 @@ export class StoreController extends BaseController {
         await new CartItemRepository().addItemToCart(cartEntity, storeItemEntity, quantity);
 
         const cart = await new CartRepository().findById(cartId);
+        const parsedCartItems = cart?.cartItems.map(item => ({ ...item, storeItem: { ...item.storeItem, store: undefined } }));
 
-        return RouteResponse.success(res, { cart });
+        return RouteResponse.success(res, { cart: { ...cart, cartItems: parsedCartItems } });
+    }
+
+    /**
+     * @swagger
+     * /api/store/{storeId}/cart/{cartItemId}:
+     *   delete:
+     *     summary: Remove um item do Carrinho
+     *     tags: [Store]
+     *     description: Remove um item do Carrinho vinculado a loja
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: storeId
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: path
+     *         name: cartItemId
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       204:
+     *         $ref: '#/components/responses/SuccessEmpty204'
+     */
+    @Delete('/:storeId/cart/:cartItemId')
+    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
+    @Middlewares(StoreValidator.onlyId, StoreValidator.hasCart, StoreValidator.cartItemId())
+    public async removeItemFromCart(req: Request, res: Response): Promise<void> {
+        const { cartItemId } = req.body;
+
+        await new CartItemRepository().delete(cartItemId);
+
+        return RouteResponse.successEmpty(res);
     }
 }

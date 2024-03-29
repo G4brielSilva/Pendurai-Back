@@ -3,7 +3,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { BaseValidator } from '../../../common/models/BaseValidator';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
-import { CartRepository, StockRepository, StoreRepository } from '../../../library/repository';
+import { CartItemRepository, CartRepository, StockRepository, StoreRepository } from '../../../library/repository';
 
 export class StoreValidator extends BaseValidator {
     /**
@@ -92,9 +92,9 @@ export class StoreValidator extends BaseValidator {
     }
 
     /**
-     * onlyStoreItemId - Verifica se o id de storeItem passado no path é válido e corresponde a Store recebida
+     * storeItemId - Verifica se o id de storeItem passado no path é válido e corresponde a Store recebida
      */
-    public static async onlyStoreItemId(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public static async storeItemId(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { storeItemId } = req.params;
 
         const storeItem = await new StockRepository().findById(storeItemId);
@@ -175,6 +175,28 @@ export class StoreValidator extends BaseValidator {
                     errorMessage: 'quantity must be a positive number'
                 },
                 errorMessage: 'quantity is invalid'
+            }
+        });
+    }
+
+    public static cartItemId(): Array<RequestHandler> {
+        return StoreValidator.validationList({
+            cartItemId: {
+                in: 'params',
+                isString: true,
+                custom: {
+                    options: async (cartItemId: string, { req }): Promise<void> => {
+                        const cartItem = await new CartItemRepository().findById(cartItemId);
+
+                        if (!cartItem) return Promise.reject();
+                        if (cartItem.storeItem.store.id !== req.body.storeId) return Promise.reject();
+
+                        req.body.cartItemId = cartItemId;
+
+                        return Promise.resolve();
+                    }
+                },
+                errorMessage: 'invalid CartItemId'
             }
         });
     }
