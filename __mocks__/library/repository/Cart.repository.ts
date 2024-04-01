@@ -6,6 +6,18 @@ export class CartRepository {
     private mockList = [
         {
             id: '1',
+            closedAt: null,
+            cartItems: [
+                {
+                    id: '1',
+                    storeItem: {
+                        id: '1',
+                        store: {
+                            id: '1'
+                        }
+                    }
+                }
+            ],
             store: {
                 id: '1'
             }

@@ -8,7 +8,10 @@ export class CartItemRepository {
             id: '1',
             quantity: 10,
             storeItem: {
-                id: '1'
+                id: '1',
+                store: {
+                    id: '1'
+                }
             },
             shopCart: {
                 id: '1'
@@ -18,5 +21,13 @@ export class CartItemRepository {
 
     public async addItemToCart(cart: ShopCart, storeItem: StoreItem, quantity: number): Promise<CartItem> {
         return Promise.resolve(this.mockList[0]);
+    }
+
+    public async delete(cart: ShopCart, storeItem: StoreItem, quantity: number): Promise<CartItem> {
+        return Promise.resolve(this.mockList[0]);
+    }
+
+    public async findById(cartItemId: string): Promise<CartItem | null> {
+        return Promise.resolve(this.mockList.find(cartItem => cartItem.id === cartItemId) as CartItem);
     }
 }
