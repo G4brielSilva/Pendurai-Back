@@ -2,7 +2,7 @@ import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, P
 import { Password } from '../../utils/Password';
 import { User } from './User.entity';
 
-@Entity()
+@Entity('authentications')
 export class Authentication {
     @PrimaryGeneratedColumn('uuid')
     id: string;

@@ -17,7 +17,7 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
             return this.repository.findOne({ where: { id } });
         }
 
-        public async find(params: IListParams): Promise<T[]> {
+        public async find(params: IListParams): Promise<[T[], number]> {
             const skip = params.size * (params.page - 1);
             const take = params.size;
 
@@ -27,15 +27,29 @@ export const BaseRepository = <T extends ObjectLiteral>(entity: EntityTarget<T>)
                 options.order = { [params.order]: params.orderBy } as FindOptionsOrder<T>;
             }
 
-            return this.repository.find(options);
+            return this.repository.findAndCount(options);
         }
 
         public async create(data: DeepPartial<T>): Promise<T> {
             return this.repository.save(data);
         }
 
-        public async update(data: DeepPartial<T>): Promise<T> {
-            return this.repository.save(data);
+        public async update(id: any, data: DeepPartial<T>): Promise<T> {
+            const register = (await this.findById(id)) as T;
+
+            const updatedRegister = this.repository.merge(register, data);
+
+            await this.repository.save(updatedRegister);
+
+            return this.findById(id) as Promise<T>;
+        }
+
+        public async softDelete(id: any): Promise<T> {
+            const register = (await this.findById(id)) as T & { deletedAt: Date };
+
+            register.deletedAt = new Date() as any;
+
+            return this.repository.save(register);
         }
     }
     return GenericBaseRepository;
