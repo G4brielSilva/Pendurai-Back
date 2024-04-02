@@ -32,6 +32,14 @@ export class StockRepository {
     }
 
     public async findById(storeItemId: string): Promise<StoreItem | null> {
+        return this.mockStockList.find(stock => stock.id === storeItemId) as StoreItem;
+    }
+
+    public async create(storeItemId: string): Promise<StoreItem | null> {
+        return this.mockStockList[0];
+    }
+
+    public async update(storeItemId: string): Promise<StoreItem | null> {
         return this.mockStockList[0];
     }
 }

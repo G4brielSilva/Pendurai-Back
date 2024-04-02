@@ -34,9 +34,6 @@ export class ProductValidator extends BaseValidator {
         const product = await new ProductRepository().findById(productId);
         if (!product) return RouteResponse.badRequest(res, 'invalid productId');
 
-        const { storeId } = req.body;
-        if (product.store.id !== storeId) return RouteResponse.unauthorized(res, 'The product does not belong to this store.');
-
         req.body.productId = productId;
         return next();
     }
