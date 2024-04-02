@@ -98,7 +98,7 @@ export class StoreValidator extends BaseValidator {
         const { storeItemId } = req.params;
 
         const storeItem = await new StockRepository().findById(storeItemId);
-        if (!storeItem) return RouteResponse.badRequest(res, 'invalid StoreId');
+        if (!storeItem || storeItem.store.deletedAt) return RouteResponse.badRequest(res, 'invalid StoreId');
 
         const { storeId } = req.body;
 
@@ -106,5 +106,38 @@ export class StoreValidator extends BaseValidator {
 
         req.body.storeItemId = storeItemId;
         return next();
+    }
+
+    /**
+     * storeItemData - Atualiza o valor de storeItem
+     * @return { Array<RequestHandler> }
+     */
+    public static storeItemData(): Array<RequestHandler> {
+        return StoreValidator.validationList({
+            quantity: {
+                in: 'body',
+                isNumeric: true,
+                custom: {
+                    options: async (value: number): Promise<void> => {
+                        if (value < 0) return Promise.reject();
+                        return Promise.resolve();
+                    },
+                    errorMessage: 'quantity must be a positive number'
+                },
+                errorMessage: 'quantity is invalid'
+            },
+            value: {
+                in: 'body',
+                isNumeric: true,
+                custom: {
+                    options: async (value: number): Promise<void> => {
+                        if (value < 0) return Promise.reject();
+                        return Promise.resolve();
+                    },
+                    errorMessage: 'value must be a positive number'
+                },
+                errorMessage: 'value is invalid'
+            }
+        });
     }
 }

@@ -6,16 +6,16 @@ import { Controller } from '../../../decorators/Controller';
 import { Delete, Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
-import { Product } from '../../../library/entity';
-import { ProductRepository } from '../../../library/repository';
+import { Product, Store } from '../../../library/entity';
+import { ProductRepository, StockRepository, StoreRepository } from '../../../library/repository';
 import { StoreValidator } from '../store/Store.validator';
 import { ProductValidator } from './Product.validator';
 
-@Controller('/store/:storeId/product')
+@Controller('/product')
 export class ProductController extends BaseController {
     /**
      * @swagger
-     * /api/store/{storeId}/product:
+     * /api/product/{storeId}:
      *   post:
      *     summary: Criando um produto
      *     tags: [Product]
@@ -45,20 +45,23 @@ export class ProductController extends BaseController {
      *       200:
      *         $ref: '#/components/responses/Success200'
      */
-    @Post()
+    @Post('/:storeId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
     @Middlewares(StoreValidator.onlyId, ProductValidator.productData())
     public async createProduct(req: Request, res: Response): Promise<void> {
-        const { storeId: store, name, description } = req.body;
+        const { storeId, name, description } = req.body;
 
-        const product = await new ProductRepository().create({ store, name, description });
+        const store = (await new StoreRepository().findById(storeId)) as Store;
+        const product = await new ProductRepository().create({ name, description });
 
-        return RouteResponse.success(res, product);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const storeItem = await new StockRepository().create({ quantity: 0, value: 0, product, store });
+        return RouteResponse.success(res, { storeItem: { ...storeItem, store: undefined } });
     }
 
     /**
      * @swagger
-     * /api/store/{storeId}/product:
+     * /api/product:
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
@@ -81,18 +84,15 @@ export class ProductController extends BaseController {
      */
     @Get()
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId)
     public async listProducts(req: Request, res: Response): Promise<void> {
         const [rows, count] = await new ProductRepository().find(ProductController.getListParams(req));
 
-        const parsedRows = rows.map(product => ({ ...product, store: undefined }));
-
-        return RouteResponse.success(res, { rows: parsedRows, count });
+        return RouteResponse.success(res, { rows, count });
     }
 
     /**
      * @swagger
-     * /api/store/{storeId}/product/{productId}:
+     * /api/product/{productId}:
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
@@ -116,19 +116,18 @@ export class ProductController extends BaseController {
      */
     @Get('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId, ProductValidator.onlyId)
+    @Middlewares(ProductValidator.onlyId)
     public async listProduct(req: Request, res: Response): Promise<void> {
         const { productId } = req.body;
 
         const product = (await new ProductRepository().findById(productId)) as Product;
 
-        const parsedProduct = { ...product, store: { ...product.store, owner: undefined } };
-        return RouteResponse.success(res, parsedProduct);
+        return RouteResponse.success(res, product);
     }
 
     /**
      * @swagger
-     * /api/store/{storeId}/product/{productId}:
+     * /api/product/{productId}:
      *   put:
      *     summary: Editando um produto
      *     tags: [Product]
@@ -164,20 +163,19 @@ export class ProductController extends BaseController {
      *         $ref: '#/components/responses/Success200'
      */
     @Put('/:productId')
-    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId, ProductValidator.onlyId, ProductValidator.productData())
+    @Roles(EnumRoles.ADMIN)
+    @Middlewares(ProductValidator.onlyId, ProductValidator.productData())
     public async updateProduct(req: Request, res: Response): Promise<void> {
         const { productId, name, description } = req.body;
 
         const product = await new ProductRepository().update(productId, { name, description });
 
-        const parsedProduct = { ...product, store: { ...product.store, owner: undefined } };
-        return RouteResponse.success(res, parsedProduct);
+        return RouteResponse.success(res, product);
     }
 
     /**
      * @swagger
-     * /api/store/{storeId}/product/{productId}:
+     * /api/product/{productId}:
      *   delete:
      *     summary: Deletando um produto
      *     tags: [Product]
@@ -201,7 +199,7 @@ export class ProductController extends BaseController {
      */
     @Delete('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId, ProductValidator.onlyId)
+    @Middlewares(ProductValidator.onlyId)
     public async deleteProduct(req: Request, res: Response): Promise<void> {
         const { productId } = req.body;
 

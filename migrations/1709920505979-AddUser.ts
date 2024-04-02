@@ -14,6 +14,6 @@ export class AddUser1709920505979 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.manager.createQueryBuilder().delete().from('user').where('name = :name', { name: 'user' }).execute();
+        await queryRunner.manager.createQueryBuilder().delete().from(User).where('name = :name', { name: 'user' }).execute();
     }
 }

@@ -210,10 +210,71 @@ describe('StoreController', () => {
             expect(response.status).toBe(400);
         });
 
-        it('should return 200 if valid storeId was provided', async () => {
+        it('should return 200 if valid params was provided', async () => {
             const response = await request(app).get(`${URL}/${validStoreItemId}`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
         });
+    });
+
+    describe('PUT - updateStoreItem', () => {
+        const URL = '/api/store/1/stock';
+        const validStoreItemId = '1';
+
+        const validStoreItemCredentials = {
+            quantity: 10,
+            value: 10.0
+        }
+
+        it('should return 401 if an invalid User is trying to update a Store Stock', async () => {
+            const response = await request(app).put(`${URL}/${validStoreItemId}`).set('Authorization', `Bearer ${USER_VALID_TOKEN}`).send(validStoreItemCredentials);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 400 if an invalid storeId was provided', async () => {
+            const response = await request(app).put('/api/store/invalid_store_id/stock/1').set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send(validStoreItemCredentials);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 401 if an User is trying to update a StoreItem from other Store', async () => {
+            const response = await request(app).put(`${URL}/${2}`).set('Authorization', `Bearer ${USER_VALID_TOKEN}`).send(validStoreItemCredentials);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 400 if an invalid storeItemId was provided', async () => {
+            jest.spyOn(StockRepository.prototype, 'findById').mockResolvedValueOnce(null);
+
+            const response = await request(app).put(`${URL}/invalid_store_item_id`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send(validStoreItemCredentials);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 400 if an invalid quantity was provided', async () => {
+            const response = await request(app).put(`${URL}/${validStoreItemId}`).send({
+                ...validStoreItemCredentials,
+                quantity: -10
+            }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 400 if an invalid value was provided', async () => {
+            const response = await request(app).put(`${URL}/${validStoreItemCredentials}`).send({
+                ...validStoreItemCredentials,
+                value: -1
+            }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 200 if valid params was provided', async () => {
+            const response = await request(app).put(`${URL}/${validStoreItemCredentials}`).send(validStoreItemCredentials).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+            expect(response.status).toBe(200);
+        });
+
     });
 });
