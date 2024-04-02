@@ -10,6 +10,7 @@ import { PublicRoute, Roles } from '../../../decorators/Roles';
 import { Authentication, User } from '../../../library/entity';
 import { AuthenticationRepository, UserRepository } from '../../../library/repository';
 import { JWT } from '../../../third-party/Jwt';
+import { ActionLoger } from '../../../utils/ActionLoger';
 import { Email } from '../../../utils/Email';
 import { AuthenticationValidator } from './Authentication.validator';
 
@@ -71,7 +72,6 @@ export class AuthenticationController extends BaseController {
      */
     @Post('/logout')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    @Middlewares()
     public async logout(req: Request, res: Response): Promise<void> {
         try {
             const { authorization } = req.headers;
@@ -113,6 +113,7 @@ export class AuthenticationController extends BaseController {
         const { email } = req.body;
 
         await Email.sendForgotPasswordEmail(email);
+
         RouteResponse.successEmpty(res);
     }
 
@@ -170,11 +171,12 @@ export class AuthenticationController extends BaseController {
      */
     @Put('/change-password')
     @PublicRoute()
-    @Middlewares(AuthenticationValidator.changePassword())
+    @Middlewares(AuthenticationValidator.changePassword(), ActionLoger.logByRequest)
     public async changePassword(req: Request, res: Response): Promise<void> {
         const { newPassword, authentication } = req.body;
 
         const changedAuthentication = await new AuthenticationRepository().changePassword(authentication, newPassword);
+
         return RouteResponse.success(res, changedAuthentication);
     }
 

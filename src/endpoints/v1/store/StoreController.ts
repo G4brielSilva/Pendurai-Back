@@ -8,6 +8,7 @@ import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { Store } from '../../../library/entity';
 import { StockRepository, StoreRepository } from '../../../library/repository';
+import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from './Store.validator';
 
 @Controller('/store')
@@ -87,7 +88,7 @@ export class StoreController extends BaseController {
      */
     @Put('/:storeId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.storeData())
+    @Middlewares(StoreValidator.onlyId, StoreValidator.storeData(), ActionLoger.logByRequest)
     public async updateStore(req: Request, res: Response): Promise<void> {
         const { storeId, cnpj, name } = req.body;
 
@@ -173,7 +174,7 @@ export class StoreController extends BaseController {
      */
     @Delete('/:storeId')
     @Roles(EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId)
+    @Middlewares(StoreValidator.onlyId, ActionLoger.logByRequest)
     public async softDeleteStore(req: Request, res: Response): Promise<void> {
         const { storeId } = req.body;
 
@@ -291,7 +292,7 @@ export class StoreController extends BaseController {
      */
     @Put('/:storeId/stock/:storeItemId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId, StoreValidator.storeItemData())
+    @Middlewares(StoreValidator.onlyId, StoreValidator.onlyStoreItemId, StoreValidator.storeItemData(), ActionLoger.logByRequest)
     public async updateStoreItem(req: Request, res: Response): Promise<void> {
         const { storeId, storeItemId: id, quantity, value } = req.body;
 
