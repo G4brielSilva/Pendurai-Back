@@ -296,7 +296,7 @@ describe('StoreController', () => {
     });
 
     describe('Store Cart Endpoints', () => {
-        describe('POST - addItemToCart', () => {
+        describe('POST - addOrUpdateQuantityItemToCart', () => {
             const URL = '/api/store/1/cart/1';
 
             const validStoreItemCredentials = {
@@ -325,13 +325,64 @@ describe('StoreController', () => {
                 const response = await request(app).post(URL).send({
                     ...validStoreItemCredentials,
                     quantity: -10
-                }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send();
+                }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
 
                 expect(response.status).toBe(400);
             });
 
             it('should return 200 if valid params was provided', async () => {
                 const response = await request(app).post(URL).send(validStoreItemCredentials).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+                expect(response.status).toBe(200);
+            });
+        });
+
+        describe('GET - getItemsFromCart', () => {
+            const URL = '/api/store/1/cart';
+
+            it('should return 401 if an invalid User is trying to add a StoreItem to Cart', async () => {
+                const response = await request(app).get(URL).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);
+
+                expect(response.status).toBe(401);
+            });
+
+            it('should return 400 if an invalid storeId was provided', async () => {
+                const response = await request(app).get('/api/store/invalid_store_id/cart').set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+                expect(response.status).toBe(400);
+            });
+
+            it('should return 200 if valid params was provided', async () => {
+                const response = await request(app).get(URL).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+                expect(response.status).toBe(200);
+            });
+        });
+
+        describe('GET - getItemFromCartByCartItemId', () => {
+            const URL = '/api/store/1/cart/1';
+
+            it('should return 401 if an invalid User is trying to add a StoreItem to Cart', async () => {
+                const response = await request(app).get(URL).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);
+
+                expect(response.status).toBe(401);
+            });
+
+            it('should return 400 if an invalid storeId was provided', async () => {
+                const response = await request(app).get('/api/store/invalid_store_id/cart').set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+                expect(response.status).toBe(400);
+            });
+
+            it('should return 400 if an invalid cartItemId was provided', async () => {
+                const response = await request(app).post('/api/store/1/cart/invalid_cart_item_id').set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+                expect(response.status).toBe(400);
+            });
+
+
+            it('should return 200 if valid params was provided', async () => {
+                const response = await request(app).get(URL).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
 
                 expect(response.status).toBe(200);
             });
