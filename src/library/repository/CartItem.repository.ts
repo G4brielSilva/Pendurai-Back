@@ -15,12 +15,17 @@ export class CartItemRepository extends BaseRepository(CartItem) {
 
         const cartItem = cartItems.find((item: CartItem) => item.storeItem.id === storeItem.id);
 
-        // Verifica se o item já está no carrinho
-        if (cartItem) {
-            await this.update(cartItem.id, { quantity });
-            return this.findById(cartItem.id);
-        }
+        // Verifica se tem estoque do item na loja
+        if (!this.cartItemHasStock(storeItem, quantity)) throw new Error('Item out of stock');
 
-        return this.create({ shopCart: cart, storeItem, quantity });
+        // Cria o item no carrinho caso não esteja já no carrinho
+        if (!cartItem) return this.create({ shopCart: cart, storeItem, quantity });
+
+        // Atualiza a quantidade caso já esteja no carrinho
+        return this.update(cartItem.id, { quantity });
+    }
+
+    private cartItemHasStock(storeItem: StoreItem, quantity: number): boolean {
+        return storeItem.quantity >= quantity;
     }
 }
