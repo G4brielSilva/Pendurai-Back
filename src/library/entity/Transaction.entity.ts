@@ -7,6 +7,9 @@ export class Transaction {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    total: number;
+
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
