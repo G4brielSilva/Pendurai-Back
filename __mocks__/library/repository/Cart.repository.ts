@@ -35,4 +35,8 @@ export class CartRepository {
     public async findById(shopcartId: string): Promise<ShopCart | null> {
         return Promise.resolve(this.mockList.find(shopcart => shopcart.id === shopcartId) as ShopCart);
     }
+
+    public async closeCart(cartId: string): Promise<ShopCart> {
+        return Promise.resolve(this.mockList[0]);
+    }
 }
