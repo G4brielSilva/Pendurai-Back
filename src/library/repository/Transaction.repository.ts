@@ -9,7 +9,7 @@ export class TransactionRepository extends BaseRepository(Transaction) {
      *
      * Cria uma transação no banco
      *
-     * @param { DeepPartial<Transaction> } Transaction
+     * @param { DeepPartial<Transaction> } transaction
      * @returns { Promise<Transaction> }
      */
     public async createTransaction(transaction: DeepPartial<Transaction>): Promise<Transaction> {
