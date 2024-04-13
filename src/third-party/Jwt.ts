@@ -23,7 +23,7 @@ export class JWT {
             const result = jwt.verify(token, process.env.JWT_TOKEN as string);
             return Promise.resolve(result) as TObject;
         } catch (error) {
-            throw new Error('Failed to decode token');
+            throw new Error('invalid token');
         }
     }
 }

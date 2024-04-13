@@ -14,7 +14,7 @@ export class ShopCart {
     @JoinColumn()
     cartItems: CartItem[];
 
-    @ManyToOne(() => Store)
+    @ManyToOne(() => Store, { eager: true })
     @JoinColumn()
     store: Store;
 }
