@@ -9,7 +9,13 @@ export class TransactionRepository {
             total: 100.0,
             transactionType: 'Compra',
             cart: {
-                id: '1'
+                id: '1',
+                store: {
+                    id: '1',
+                    owner: {
+                        id: 'valid_user_id'
+                    }
+                }
             }
         }
     ] as unknown as Transaction[];
@@ -20,5 +26,13 @@ export class TransactionRepository {
 
     public async createTransaction(transaction: Transaction): Promise<Transaction> {
         return Promise.resolve(this.mockList[0]);
+    }
+
+    public async findById(id: string): Promise<Transaction | undefined> {
+        return Promise.resolve(this.mockList.find(transaction => transaction.id === id));
+    }
+
+    public async softDelete(id: string): Promise<Transaction> {
+        return Promise.resolve({ ...this.mockList[0], deletedAt: new Date() });
     }
 }
