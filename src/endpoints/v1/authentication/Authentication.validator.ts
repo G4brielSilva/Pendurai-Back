@@ -4,7 +4,6 @@ import { BaseValidator } from '../../../common/models/BaseValidator';
 import { AuthenticationRepository } from '../../../library/repository';
 import { Password } from '../../../utils/Password';
 
-// TODO: adicionar model para poupar repetição de validação
 export class AuthenticationValidator extends BaseValidator {
     private static model: Schema = {
         email: {

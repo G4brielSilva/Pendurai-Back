@@ -78,7 +78,7 @@ export class StoreValidator extends BaseValidator {
      * onlyId - Verifica se o id passado no path é válido e corresponde ao usuário autenticado
      */
     public static async onlyId(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { storeId } = req.params;
+        const storeId = req.params.storeId || req.body.storeId;
 
         const store = await new StoreRepository().findById(storeId);
         if (!store) return RouteResponse.badRequest(res, 'invalid StoreId');

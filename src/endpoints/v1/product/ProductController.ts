@@ -16,19 +16,13 @@ import { ProductValidator } from './Product.validator';
 export class ProductController extends BaseController {
     /**
      * @swagger
-     * /api/product/{storeId}:
+     * /api/product:
      *   post:
      *     summary: Criando um produto
      *     tags: [Product]
      *     description: Criando um produto vinculado a uma loja
      *     security:
      *      - BearerAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: storeId
-     *         required: true
-     *         schema:
-     *           type: string
      *     requestBody:
      *       required: true
      *       content:
@@ -36,6 +30,9 @@ export class ProductController extends BaseController {
      *           schema:
      *             type: object
      *             properties:
+     *               storeId:
+     *                 type: string
+     *                 example: 'store_id'
      *               name:
      *                 type: string
      *                 example: 'product_name'
@@ -46,7 +43,7 @@ export class ProductController extends BaseController {
      *       200:
      *         $ref: '#/components/responses/Success200'
      */
-    @Post('/:storeId')
+    @Post()
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
     @Middlewares(StoreValidator.onlyId, ProductValidator.productData())
     public async createProduct(req: Request, res: Response): Promise<void> {
@@ -66,15 +63,10 @@ export class ProductController extends BaseController {
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
-     *     description: Listando produtos vinculados a uma loja
+     *     description: Listando produtos
      *     security:
      *      - BearerAuth: []
      *     parameters:
-     *       - in: path
-     *         name: storeId
-     *         required: true
-     *         schema:
-     *           type: string
      *       - $ref: '#/components/parameters/page'
      *       - $ref: '#/components/parameters/size'
      *       - $ref: '#/components/parameters/order'
@@ -95,17 +87,12 @@ export class ProductController extends BaseController {
      * @swagger
      * /api/product/{productId}:
      *   get:
-     *     summary: Listando produtos
+     *     summary: Listando um produto
      *     tags: [Product]
-     *     description: Listando produtos vinculados a uma loja
+     *     description: Listando um produto específico
      *     security:
      *      - BearerAuth: []
      *     parameters:
-     *       - in: path
-     *         name: storeId
-     *         required: true
-     *         schema:
-     *           type: string
      *       - in: path
      *         name: productId
      *         required: true
@@ -128,24 +115,13 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product/{productId}:
+     * /api/product:
      *   put:
      *     summary: Editando um produto
      *     tags: [Product]
      *     description: Editando um produto vinculado a uma loja
      *     security:
      *      - BearerAuth: []
-     *     parameters:
-     *     - in: path
-     *       name: storeId
-     *       required: true
-     *       schema:
-     *         type: string
-     *     - in: path
-     *       name: productId
-     *       required: true
-     *       schema:
-     *         type: string
      *     requestBody:
      *       required: true
      *       content:
@@ -153,6 +129,9 @@ export class ProductController extends BaseController {
      *           schema:
      *             type: object
      *             properties:
+     *               productId:
+     *                 type: string
+     *                 example: 'product_id'
      *               name:
      *                 type: string
      *                 example: 'product_name'
@@ -163,7 +142,7 @@ export class ProductController extends BaseController {
      *       200:
      *         $ref: '#/components/responses/Success200'
      */
-    @Put('/:productId')
+    @Put()
     @Roles(EnumRoles.ADMIN)
     @Middlewares(ProductValidator.onlyId, ProductValidator.productData(), ActionLoger.logByRequest)
     public async updateProduct(req: Request, res: Response): Promise<void> {
@@ -184,11 +163,6 @@ export class ProductController extends BaseController {
      *     security:
      *      - BearerAuth: []
      *     parameters:
-     *     - in: path
-     *       name: storeId
-     *       required: true
-     *       schema:
-     *         type: string
      *     - in: path
      *       name: productId
      *       required: true

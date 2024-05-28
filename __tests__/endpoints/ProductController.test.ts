@@ -37,25 +37,27 @@ const AUTHORIZED_USER_TOKEN = 'ADMIN_VALID_TOKEN';
 
 describe('ProductController', () => {
     describe('POST - createProduct', () => {
-        const URL = '/api/product/1';
+        const URL = '/api/product';
 
         const validProductCredentials = {
+            storeId: '1',
             name: 'valid_product_name',
             description: 'valid_product_description'
         }
 
         it('should return 401 if an unauthorized User was tried to create a Product from other Store', async () => {
-            const response = await request(app).post('/api/product/2').send({
-                ...validProductCredentials
+            const response = await request(app).post('/api/product').send({
+                ...validProductCredentials,
+                storeId: '2'
             }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
 
             expect(response.status).toBe(401);
         });
 
         it('should return 400 if an invalid storeId was provided', async () => {
-            const response = await request(app).post('/api/product/invalid_store_id').send({
+            const response = await request(app).post('/api/product').send({
                 ...validProductCredentials,
-                name: 'nm'
+                storeId: 'invalid_store_id'
             }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
 
             expect(response.status).toBe(400);
@@ -65,7 +67,7 @@ describe('ProductController', () => {
             const response = await request(app).post(URL).send({
                 ...validProductCredentials
             }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
-
+            
             expect(response.status).toBe(401);
         });
 
@@ -80,7 +82,7 @@ describe('ProductController', () => {
 
         it('should return 200 if valid email and password was provided', async () => {
             const response = await request(app).post(URL).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
-
+            
             expect(response.status).toBe(200);
         });
     });
@@ -128,24 +130,25 @@ describe('ProductController', () => {
         const URL = '/api/product';
 
         const validProductCredentials = {
+            productId: '1',
             name: 'valid_product_name',
             description: 'valid_product_description'
         }
 
         it('should return 401 if an invalid User is trying to get a Store data', async () => {
-            const response = await request(app).get(`${URL}/1`).send(validProductCredentials);
+            const response = await request(app).get(URL).send(validProductCredentials);
 
             expect(response.status).toBe(401);
         });
 
         it('should return 400 if an invalid productId was provided', async () => {
-            const response = await request(app).put(`${URL}/invalid_product_id`).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+            const response = await request(app).put(URL).send({ ...validProductCredentials, productId: 'invalid_product_id'}).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
 
             expect(response.status).toBe(400);
         });
 
         it('should return 400 if an invalid name was provided', async () => {
-            const response = await request(app).put(`${URL}/1`).send({
+            const response = await request(app).put(URL).send({
                 ...validProductCredentials,
                 name: 'nm'
             }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
@@ -154,7 +157,7 @@ describe('ProductController', () => {
         });
 
         it('should return 200 if valid email and password was provided', async () => {
-            const response = await request(app).put(`${URL}/1`).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
+            const response = await request(app).put(URL).send(validProductCredentials).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
 
             expect(response.status).toBe(200);
         });

@@ -27,7 +27,7 @@ export class ProductValidator extends BaseValidator {
      * onlyId - Verifica se o id passado no path é válido e correspondente a Loja
      */
     public static async onlyId(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { productId } = req.params;
+        const productId = req.params.productId || req.body.productId;
 
         if (!productId) return RouteResponse.badRequest(res, 'productId are required');
 
