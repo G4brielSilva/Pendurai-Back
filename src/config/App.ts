@@ -25,6 +25,8 @@ export class App {
 
     public assets: any[] | undefined;
 
+    public logger: any;
+
     constructor(appInit: {
         path?: string;
         port: number;
@@ -33,6 +35,7 @@ export class App {
         dataSource?: DataSource;
         docs?: boolean;
         assets?: any[];
+        logger?: any;
         swaggerConfig?: swaggerJSDoc.OAS3Options;
     }) {
         this.app = express();
@@ -42,6 +45,9 @@ export class App {
         this.swaggerConfig = appInit.swaggerConfig;
         this.docs = appInit.docs;
         this.assets = appInit.assets;
+        this.logger = appInit.logger;
+
+        this.setupLogger();
 
         this.app.use(express.json());
         this.app.use(helmet());
@@ -59,6 +65,12 @@ export class App {
         if (!this.docs) return;
 
         this.app.use('/docs', express.static(path.join('./docs')));
+    }
+
+    private setupLogger(): void {
+        if (!this.logger) return;
+
+        this.app.use(this.logger.log);
     }
 
     private setupAssets(): void {
@@ -99,7 +111,7 @@ export class App {
     public async start(): Promise<void> {
         this.databaseConnect();
         this.app.listen(this.port, () => {
-            console.log(`App listening on the http://localhost:${this.port}`);
+            console.log(`App listening on the http://localhost:${this.port}\n\n`);
         });
     }
 }
