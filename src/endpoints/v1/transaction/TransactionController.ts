@@ -10,11 +10,11 @@ import { CartRepository, TransactionRepository } from '../../../library/reposito
 import { StoreValidator } from '../store/Store.validator';
 import { TransactionValidator } from './Transaction.validator';
 
-@Controller('/transaction')
+@Controller('/transactions')
 export class TransactionController extends BaseController {
     /**
      * @swagger
-     * /api/transaction/{storeId}:
+     * /api/transactions/{storeId}:
      *   post:
      *     summary: Criar Transação
      *     tags: [Transaction]
@@ -64,7 +64,7 @@ export class TransactionController extends BaseController {
 
     /**
      * @swagger
-     * /api/transaction/{transactionId}:
+     * /api/transactions/{transactionId}:
      *   delete:
      *     summary: Deleta Transação
      *     tags: [Transaction]

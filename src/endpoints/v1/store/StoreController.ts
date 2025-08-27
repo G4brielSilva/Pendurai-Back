@@ -11,11 +11,11 @@ import { CartItemRepository, CartRepository, StockRepository, StoreRepository } 
 import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from './Store.validator';
 
-@Controller('/store')
+@Controller('/stores')
 export class StoreController extends BaseController {
     /**
      * @swagger
-     * /api/store:
+     * /api/stores:
      *   post:
      *     summary: Criar de Loja no banco
      *     tags: [Store]
@@ -55,7 +55,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}:
+     * /api/stores/{storeId}:
      *   put:
      *     summary: Edição de dados de uma Loja
      *     tags: [Store]
@@ -98,7 +98,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}:
+     * /api/stores/{storeId}:
      *   get:
      *     summary: Listagem de uma Loja específica
      *     tags: [Store]
@@ -128,7 +128,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store:
+     * /api/stores:
      *   get:
      *     summary: Listagem de Lojas
      *     tags: [Store]
@@ -154,7 +154,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}:
+     * /api/stores/{storeId}:
      *   delete:
      *     summary: Deleção de Lojas
      *     tags: [Store]
@@ -184,7 +184,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/stock:
+     * /api/stores/{storeId}/stock:
      *   get:
      *     summary: Listagem do Estoque de uma Loja
      *     tags: [Store]
@@ -219,7 +219,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/stock/{storeItemId}:
+     * /api/stores/{storeId}/stock/{storeItemId}:
      *   get:
      *     summary: Listagem de um Item do Estoque de uma Loja
      *     tags: [Store]
@@ -255,7 +255,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/stock/{storeItemId}:
+     * /api/stores/{storeId}/stock/{storeItemId}:
      *   put:
      *     summary: Atualiza um item de uma Loja
      *     tags: [Store]
@@ -306,7 +306,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/cart/{storeItemId}:
+     * /api/stores/{storeId}/cart/{storeItemId}:
      *   post:
      *     summary: Adiciona um item ou altera a quantidade de um item ao Carrinho
      *     tags: [Store]
@@ -363,7 +363,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/cart:
+     * /api/stores/{storeId}/cart:
      *   get:
      *     summary: Lista o Carrinho e os Itens nele
      *     tags: [Store]
@@ -394,7 +394,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/cart/{cartItemId}:
+     * /api/stores/{storeId}/cart/{cartItemId}:
      *   get:
      *     summary: Trazer o item específico do Carrinho
      *     tags: [Store]
@@ -430,7 +430,7 @@ export class StoreController extends BaseController {
 
     /**
      * @swagger
-     * /api/store/{storeId}/cart/{cartItemId}:
+     * /api/stores/{storeId}/cart/{cartItemId}:
      *   delete:
      *     summary: Remove um item do Carrinho
      *     tags: [Store]

@@ -12,11 +12,11 @@ import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from '../store/Store.validator';
 import { ProductValidator } from './Product.validator';
 
-@Controller('/product')
+@Controller('/products')
 export class ProductController extends BaseController {
     /**
      * @swagger
-     * /api/product:
+     * /api/products:
      *   post:
      *     summary: Criando um produto
      *     tags: [Product]
@@ -59,7 +59,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product:
+     * /api/products:
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
@@ -85,7 +85,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product/{productId}:
+     * /api/products/{productId}:
      *   get:
      *     summary: Listando um produto
      *     tags: [Product]
@@ -115,7 +115,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product:
+     * /api/products:
      *   put:
      *     summary: Editando um produto
      *     tags: [Product]
@@ -155,7 +155,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product/{productId}:
+     * /api/products/{productId}:
      *   delete:
      *     summary: Deletando um produto
      *     tags: [Product]

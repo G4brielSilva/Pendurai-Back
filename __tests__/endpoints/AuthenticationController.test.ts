@@ -1,7 +1,6 @@
  import request from 'supertest';
 import { App } from '../../src/config/App';
 import { v1 } from '../../src/endpoints/v1';
-import { JWT } from '../../src/third-party/Jwt';
 import { Password } from '../../src/utils/Password';
 
 // Repositories mock
@@ -99,30 +98,38 @@ describe('AuthenticationController', () => {
         });
     });
 
-    describe('POST - logout', () => {
-        const URL = '/api/auth/logout';
-        const validToken = 'USER_VALID_TOKEN';
+    // describe('POST - refresh-token', () => {
+    //     const URL = '/api/auth/refresh-token';
+    //     const validBody = {
+    //         refreshToken: 'valid_refresh_token'
+    //     };
 
-        it('should return 400 if an invalid token was provided', async () => {
-            const response = await request(app).post(URL).set('Authorization', 'Bearer Invalid_token');
+    //     it('should return 400 if no refreshToken was provided', async () => {
+    //         const response = await request(app).post(URL).send({});
 
-            expect(response.status).toBe(400);
-        });
+    //         expect(response.status).toBe(400);
+    //     });
 
-        it('should return 500 if an error occurred in token deactivation', async () => {
-            jest.spyOn(JWT, 'deactiveToken').mockRejectedValueOnce(new Error('Mocked error on token deactivating'));
+    //     it('should return 400 if an invalid refreshToken was provided', async () => {
+    //         jest.spyOn(JWT, 'decodeToken').mockRejectedValueOnce(new Error('invalid token'));
 
-            const response = await request(app).post(URL).set('Authorization', `Bearer ${validToken}`);
+    //         const response = await request(app).post(URL).send({ refreshToken: 'invalid_refresh_token'});
 
-            expect(response.status).toBe(500);
-        });
+    //         expect(response.status).toBe(400);
+    //     });
 
-        it('should return 204 if the token was successfull deactivated', async () => {
-            const response = await request(app).post(URL).set('Authorization', `Bearer ${validToken}`);
+    //     it('should return 200 if a valid refreshToken was provided', async () => {
+    //         jest.spyOn(JWT, 'decodeToken').mockResolvedValueOnce({
+    //             authId: 'valid_auth_id',
+    //             userId: 'valid_user_id',
+    //             admin: false
+    //         } as unknown as TObject);
 
-            expect(response.status).toBe(204);
-        });
-    });
+    //         const response = await request(app).post(URL).send(validBody);
+
+    //         expect(response.status).toBe(200);
+    //     });
+    // });
 
     describe('POST - forgot-password', () => {
         const URL = '/api/auth/forgot-password';

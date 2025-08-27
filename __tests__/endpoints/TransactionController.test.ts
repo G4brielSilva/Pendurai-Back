@@ -36,7 +36,7 @@ const ADMIN_VALID_TOKEN = 'ADMIN_VALID_TOKEN';
 
 describe('TransactionController', () => {
     describe('POST - createTransaction', () => {
-        const URL = '/api/transaction';
+        const URL = '/api/transactions';
         const validStoreId = 1;
         const validBody = {
             transactionType: 'Compra'
@@ -70,7 +70,7 @@ describe('TransactionController', () => {
     });
 
     describe('DELETE - softDeleteTransaction', () => {
-        const URL = '/api/transaction';
+        const URL = '/api/transactions';
         const validTransactionId = 1;
 
         it('should return 401 if an unauthorized user is trying to delete a transaction', async () => {
