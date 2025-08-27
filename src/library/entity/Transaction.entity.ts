@@ -22,7 +22,7 @@ export class Transaction {
     @Column({ type: 'timestamp', nullable: true })
     payedAt: Date;
 
-    @OneToOne(() => ShopCart)
+    @OneToOne(() => ShopCart, { eager: true })
     @JoinColumn()
     cart: ShopCart;
 

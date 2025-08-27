@@ -64,8 +64,31 @@ describe('TransactionController', () => {
 
         it('should return 200 if valid data was provided', async () => {
             const response = await request(app).post(`${URL}/${validStoreId}`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`).send(validBody);
-            console.log(response.body);
+
             expect(response.status).toBe(200);
+        });
+    });
+
+    describe('DELETE - softDeleteTransaction', () => {
+        const URL = '/api/transaction';
+        const validTransactionId = 1;
+
+        it('should return 401 if an unauthorized user is trying to delete a transaction', async () => {
+            const response = await request(app).delete(`${URL}/1`).set('Authorization', `Bearer ${USER_VALID_TOKEN}`);
+
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 400 if an invalid transactionId was provided', async () => {
+            const response = await request(app).delete(`${URL}/invalid-transaction-id`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+            expect(response.status).toBe(400);
+        });
+
+        it('should return 204 if valid data was provided', async () => {
+            const response = await request(app).delete(`${URL}/${validTransactionId}`).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+            expect(response.status).toBe(204);
         });
     });
 });

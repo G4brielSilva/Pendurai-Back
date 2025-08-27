@@ -3,7 +3,7 @@ import { BaseController } from '../../../common/models/BaseController';
 import { RouteResponse } from '../../../common/models/RouteResponse';
 import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Controller';
-import { Post } from '../../../decorators/Methods';
+import { Delete, Post } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { CartRepository, TransactionRepository } from '../../../library/repository';
@@ -37,6 +37,7 @@ export class TransactionController extends BaseController {
      *             properties:
      *               transactionType:
      *                 type: string
+     *                 enum: [Compra, Fiado, Pagamento]
      *     responses:
      *       204:
      *         $ref: '#/components/responses/SuccessEmpty204'
@@ -58,6 +59,37 @@ export class TransactionController extends BaseController {
 
         await new CartRepository().closeCart(cart.id);
 
-        return RouteResponse.success(res, { ...transaction, cart: undefined, total: transaction.total.toFixed(2) });
+        return RouteResponse.success(res, { ...transaction, cart: { ...cart, cartItems: undefined }, total: transaction.total.toFixed(2) });
+    }
+
+    /**
+     * @swagger
+     * /api/transaction/{transactionId}:
+     *   delete:
+     *     summary: Deleta Transação
+     *     tags: [Transaction]
+     *     description: Deleta uma transação registrada
+     *     security:
+     *       - BearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: transactionId
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: Id da Transação
+     *     responses:
+     *       204:
+     *         $ref: '#/components/responses/SucessEmpty204'
+     */
+    @Delete('/:transactionId')
+    @Roles(EnumRoles.ADMIN, EnumRoles.USER)
+    @Middlewares(TransactionValidator.onlyId())
+    public async softDeleteTransaction(req: Request, res: Response): Promise<void> {
+        const { transactionId } = req.body;
+
+        await new TransactionRepository().softDelete(transactionId);
+
+        RouteResponse.successEmpty(res);
     }
 }
