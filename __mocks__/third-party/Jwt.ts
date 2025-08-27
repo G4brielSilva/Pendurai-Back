@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { RouteResponse } from '../../src/common/models/RouteResponse';
 import { EnumRoles } from '../../src/common/models/enum/EnumRoles';
+import { ITokens } from '../../src/third-party/Jwt';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const generateAccessTokenFn = jest.fn();
@@ -9,7 +10,8 @@ const generateAccessTokenFn = jest.fn();
 export class JWT {
     public static decodedTokens = {
         USER_VALID_TOKEN: { userId: 'registered_user_id', authId: '62d5bb3b188314032c4f7815', role: EnumRoles.USER },
-        ADMIN_VALID_TOKEN: { userId: 'valid_user_id', authId: '62d5bb3b188314032c4f7813', role: EnumRoles.ADMIN }
+        ADMIN_VALID_TOKEN: { userId: 'valid_user_id', authId: '62d5bb3b188314032c4f7813', role: EnumRoles.ADMIN },
+        REFRESH_TOKEN: { userId: 'valid_user_id', authId: '62d5bb3b188314032c4f7813', role: EnumRoles.ADMIN }
     };
 
     public static authenticateToken(req: Request, res: Response, next: NextFunction): void {
@@ -23,8 +25,8 @@ export class JWT {
         return next();
     }
 
-    public static generateAccessToken = generateAccessTokenFn.mockImplementation((userId: string, authId: string): string => {
-        return 'USER_VALID_TOKEN';
+    public static generateAccessAndRefreshToken = generateAccessTokenFn.mockImplementation((userId: string, authId: string): ITokens => {
+        return { accessToken: 'USER_VALID_TOKEN', refreshToken: 'REFRESH_TOKEN' };
     });
 
     public static decodeToken(token: string): any {

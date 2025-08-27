@@ -6,7 +6,7 @@ import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Controller';
 import { Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
-import { PublicRoute, Roles } from '../../../decorators/Roles';
+import { PublicRoute } from '../../../decorators/Roles';
 import { Authentication, User } from '../../../library/entity';
 import { AuthenticationRepository, UserRepository } from '../../../library/repository';
 import { JWT } from '../../../third-party/Jwt';
@@ -52,37 +52,43 @@ export class AuthenticationController extends BaseController {
         } = authentication;
 
         const role = admin ? EnumRoles.ADMIN : EnumRoles.USER;
-        const token = JWT.generateAccessToken(userId, authId, role);
+        const tokens = JWT.generateAccessAndRefreshToken(userId, authId, role);
 
-        return RouteResponse.success(res, { Authorization: `Bearer ${token}` });
+        return RouteResponse.success(res, tokens);
     }
 
     /**
      * @swagger
-     * /api/auth/logout:
+     * /api/auth/login:
      *   post:
-     *     summary: Logout de usuário
+     *     summary: Login de usuário
      *     tags: [Authentication]
-     *     description: Faz o logout do usuário
-     *     security:
-     *       - BearerAuth: []
+     *     description: Faz o login do usuário e retorna um token
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               refreshToken:
+     *                 type: string
+     *                 example: 'uzsiydfgauikywerv8237r'
      *     responses:
-     *       204:
-     *         $ref: '#/components/responses/successEmpty'
+     *       200:
+     *         $ref: '#/components/responses/success'
      */
-    @Post('/logout')
-    @Roles(EnumRoles.USER, EnumRoles.ADMIN)
-    public async logout(req: Request, res: Response): Promise<void> {
-        try {
-            const { authorization } = req.headers;
+    @Post('/refresh-token')
+    @PublicRoute()
+    @Middlewares(AuthenticationValidator.refreshToken())
+    public async refreshToken(req: Request, res: Response): Promise<void> {
+        const { refreshToken } = req.body;
+        const { authId, userId, admin } = await JWT.decodeToken(refreshToken);
 
-            await JWT.deactiveToken(authorization as string);
+        const role = admin ? EnumRoles.ADMIN : EnumRoles.USER;
+        const tokens = JWT.generateAccessAndRefreshToken(userId, authId, role);
 
-            return RouteResponse.successEmpty(res);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            return RouteResponse.serverError(error.message, res);
-        }
+        return RouteResponse.success(res, tokens);
     }
 
     /**
