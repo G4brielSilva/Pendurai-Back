@@ -29,64 +29,6 @@ export class Redis {
         return this.client.quit();
     }
 
-    /* Auth Token Management */
-
-    /**
-     * createBlackListAuthKey
-     *
-     * @param { string } key
-     * @returns { string } key para inserção em blacklist no Redis
-     */
-    private createBlackListAuthKey(key: string): string {
-        return `auth-token:blacklist:${key}`;
-    }
-
-    /**
-     * addTokenBlackList - adiciona token a blacklist
-     *
-     * @param { string } key
-     * @returns { Promise<boolean> } Valor que define se o token foi adicionado ou não
-     */
-    public async addTokenBlackList(key: string): Promise<boolean> {
-        await this.clientConnect();
-
-        await this.client.set(this.createBlackListAuthKey(key), 'true', { EX: 60 * 60 * 24, NX: true });
-        const result = await this.getTokenByBlackList(this.createBlackListAuthKey(key));
-
-        await this.clienteClose();
-
-        return Promise.resolve(Boolean(result));
-    }
-
-    /**
-     * getTokenByBlackList
-     *
-     * @param { string } key
-     * @returns { Promise<string | null> } Token da blacklist
-     */
-    private async getTokenByBlackList(key: string): Promise<string | null> {
-        const result = await this.client.get(key);
-        return Promise.resolve(result);
-    }
-
-    /**
-     * connectAndGetTokenByBlackList
-     *
-     * @param { string } key
-     * @returns { Promise<string | null> } Recupera Token da blacklist
-     */
-    public async connectAndGetTokenByBlackList(key: string): Promise<string | null> {
-        await this.clientConnect();
-
-        const result = await this.getTokenByBlackList(this.createBlackListAuthKey(key));
-
-        await this.clienteClose();
-
-        return Promise.resolve(result);
-    }
-
-    /* Password Recovery Code Management */
-
     /**
      * createRecoveryCodeKey
      *

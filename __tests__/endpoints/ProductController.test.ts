@@ -37,7 +37,7 @@ const AUTHORIZED_USER_TOKEN = 'ADMIN_VALID_TOKEN';
 
 describe('ProductController', () => {
     describe('POST - createProduct', () => {
-        const URL = '/api/product';
+        const URL = '/api/products';
 
         const validProductCredentials = {
             storeId: '1',
@@ -46,7 +46,7 @@ describe('ProductController', () => {
         }
 
         it('should return 401 if an unauthorized User was tried to create a Product from other Store', async () => {
-            const response = await request(app).post('/api/product').send({
+            const response = await request(app).post(URL).send({
                 ...validProductCredentials,
                 storeId: '2'
             }).set('Authorization', `Bearer ${UNAUTHORIZED_USER_TOKEN}`);
@@ -55,7 +55,7 @@ describe('ProductController', () => {
         });
 
         it('should return 400 if an invalid storeId was provided', async () => {
-            const response = await request(app).post('/api/product').send({
+            const response = await request(app).post(URL).send({
                 ...validProductCredentials,
                 storeId: 'invalid_store_id'
             }).set('Authorization', `Bearer ${AUTHORIZED_USER_TOKEN}`);
@@ -88,7 +88,7 @@ describe('ProductController', () => {
     });
 
     describe('GET - listProducts', () => {
-        const URL = '/api/product';
+        const URL = '/api/products';
 
         it('should return 401 if an unauthorized User was tried to get a Product', async () => {
             const response = await request(app).get(URL);
@@ -104,7 +104,7 @@ describe('ProductController', () => {
     });
 
     describe('GET - listProduct', () => {
-        const URL = '/api/product';
+        const URL = '/api/products';
         const validProductId = 1;
 
         it('should return 401 if an invalid User is trying to get a Store data', async () => {
@@ -127,7 +127,7 @@ describe('ProductController', () => {
     });
 
     describe('PUT - updateProduct', () => {
-        const URL = '/api/product';
+        const URL = '/api/products';
 
         const validProductCredentials = {
             productId: '1',
@@ -164,7 +164,7 @@ describe('ProductController', () => {
     });
 
     describe('DELETE - deleteProduct', () => {
-        const URL = '/api/product';
+        const URL = '/api/products';
 
         const validProductId = 1;
 

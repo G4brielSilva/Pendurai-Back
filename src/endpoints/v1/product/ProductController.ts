@@ -12,11 +12,11 @@ import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from '../store/Store.validator';
 import { ProductValidator } from './Product.validator';
 
-@Controller('/product')
+@Controller('/products')
 export class ProductController extends BaseController {
     /**
      * @swagger
-     * /api/product:
+     * /api/products:
      *   post:
      *     summary: Criando um produto
      *     tags: [Product]
@@ -41,7 +41,7 @@ export class ProductController extends BaseController {
      *                 example: 'An product description'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Post()
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -59,7 +59,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product:
+     * /api/products:
      *   get:
      *     summary: Listando produtos
      *     tags: [Product]
@@ -73,7 +73,7 @@ export class ProductController extends BaseController {
      *       - $ref: '#/components/parameters/orderBy'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get()
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -85,7 +85,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product/{productId}:
+     * /api/products/{productId}:
      *   get:
      *     summary: Listando um produto
      *     tags: [Product]
@@ -100,7 +100,7 @@ export class ProductController extends BaseController {
      *           type: string
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -115,7 +115,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product:
+     * /api/products:
      *   put:
      *     summary: Editando um produto
      *     tags: [Product]
@@ -140,7 +140,7 @@ export class ProductController extends BaseController {
      *                 example: 'An product description'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Put()
     @Roles(EnumRoles.ADMIN)
@@ -155,7 +155,7 @@ export class ProductController extends BaseController {
 
     /**
      * @swagger
-     * /api/product/{productId}:
+     * /api/products/{productId}:
      *   delete:
      *     summary: Deletando um produto
      *     tags: [Product]
@@ -170,7 +170,7 @@ export class ProductController extends BaseController {
      *         type: string
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Delete('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)

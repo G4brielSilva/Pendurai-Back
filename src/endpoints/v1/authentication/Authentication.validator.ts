@@ -71,6 +71,21 @@ export class AuthenticationValidator extends BaseValidator {
     }
 
     /**
+     * refreshToken
+     * @return { Array<RequestHandler> }
+     */
+    public static refreshToken(): Array<RequestHandler> {
+        return AuthenticationValidator.validationList({
+            refreshToken: {
+                in: 'body',
+                isString: true,
+                notEmpty: true,
+                errorMessage: 'refreshToken is required'
+            }
+        });
+    }
+
+    /**
      * forgotPassword
      * @return { Array<RequestHandler> }
      */
