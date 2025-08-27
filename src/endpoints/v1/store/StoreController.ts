@@ -37,7 +37,7 @@ export class StoreController extends BaseController {
      *                 example: '62781317000160'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Post()
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -84,7 +84,7 @@ export class StoreController extends BaseController {
      *                 example: '62781317000160'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Put('/:storeId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -114,7 +114,7 @@ export class StoreController extends BaseController {
      *         description: Id da loja
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:storeId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -142,7 +142,7 @@ export class StoreController extends BaseController {
      *       - $ref: '#/components/parameters/orderBy'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get()
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -170,7 +170,7 @@ export class StoreController extends BaseController {
      *         description: Id da loja
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Delete('/:storeId')
     @Roles(EnumRoles.ADMIN)
@@ -203,7 +203,7 @@ export class StoreController extends BaseController {
      *       - $ref: '#/components/parameters/orderBy'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:storeId/stock')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -239,7 +239,7 @@ export class StoreController extends BaseController {
      *           type: string
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:storeId/stock/:storeItemId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -288,7 +288,7 @@ export class StoreController extends BaseController {
      *                 example: 19.99
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Put('/:storeId/stock/:storeItemId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
@@ -336,7 +336,7 @@ export class StoreController extends BaseController {
      *                 example: 10
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Post('/:storeId/cart/:storeItemId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -378,7 +378,7 @@ export class StoreController extends BaseController {
      *           type: string
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:storeId/cart')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -414,7 +414,7 @@ export class StoreController extends BaseController {
      *           type: string
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:storeId/cart/:cartItemId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -450,7 +450,7 @@ export class StoreController extends BaseController {
      *           type: string
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Delete('/:storeId/cart/:cartItemId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)

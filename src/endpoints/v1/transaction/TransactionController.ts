@@ -40,7 +40,7 @@ export class TransactionController extends BaseController {
      *                 enum: [Compra, Fiado, Pagamento]
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Post('/:storeId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)

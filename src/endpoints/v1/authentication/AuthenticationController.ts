@@ -38,7 +38,7 @@ export class AuthenticationController extends BaseController {
      *                 example: 'P@2sword'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Post('/login')
     @PublicRoute()
@@ -68,7 +68,7 @@ export class AuthenticationController extends BaseController {
      *       - BearerAuth: []
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Post('/logout')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -104,7 +104,7 @@ export class AuthenticationController extends BaseController {
      *                 example: 'email@email.com'
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Post('/forgot-password')
     @PublicRoute()
@@ -133,7 +133,7 @@ export class AuthenticationController extends BaseController {
      *         description: O código de recuperação a ser verificado
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Get('/verify-recovery-code/:recoveryCode')
     @PublicRoute()
@@ -167,7 +167,7 @@ export class AuthenticationController extends BaseController {
      *                 example: 'a1b2c3'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Put('/change-password')
     @PublicRoute()
@@ -208,7 +208,7 @@ export class AuthenticationController extends BaseController {
      *                 example: 'name'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Post('/register')
     @PublicRoute()

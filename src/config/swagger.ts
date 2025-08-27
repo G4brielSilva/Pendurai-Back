@@ -56,7 +56,7 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
                 }
             },
             responses: {
-                Success200: {
+                success: {
                     code: 200,
                     description: 'Sucess',
                     content: {
@@ -77,7 +77,7 @@ export const swaggerConfig: swaggerJSDoc.OAS3Options = {
                         }
                     }
                 },
-                SuccessEmpty204: {
+                successEmpty: {
                     description: 'Sucess Empty'
                 }
             },

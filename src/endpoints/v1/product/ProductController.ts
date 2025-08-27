@@ -41,7 +41,7 @@ export class ProductController extends BaseController {
      *                 example: 'An product description'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Post()
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -73,7 +73,7 @@ export class ProductController extends BaseController {
      *       - $ref: '#/components/parameters/orderBy'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get()
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -100,7 +100,7 @@ export class ProductController extends BaseController {
      *           type: string
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Get('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
@@ -140,7 +140,7 @@ export class ProductController extends BaseController {
      *                 example: 'An product description'
      *     responses:
      *       200:
-     *         $ref: '#/components/responses/Success200'
+     *         $ref: '#/components/responses/success'
      */
     @Put()
     @Roles(EnumRoles.ADMIN)
@@ -170,7 +170,7 @@ export class ProductController extends BaseController {
      *         type: string
      *     responses:
      *       204:
-     *         $ref: '#/components/responses/SuccessEmpty204'
+     *         $ref: '#/components/responses/successEmpty'
      */
     @Delete('/:productId')
     @Roles(EnumRoles.USER, EnumRoles.ADMIN)
