@@ -20,6 +20,7 @@ export class CartItemRepository {
     ] as unknown as CartItem[];
 
     public async addItemToCart(cart: ShopCart, storeItem: StoreItem, quantity: number): Promise<CartItem> {
+        if (quantity > this.mockList[0].quantity) throw Error('Item out of stock');
         return Promise.resolve(this.mockList[0]);
     }
 

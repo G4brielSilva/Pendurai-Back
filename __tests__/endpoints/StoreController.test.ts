@@ -330,6 +330,15 @@ describe('StoreController', () => {
                 expect(response.status).toBe(400);
             });
 
+            it('should return 400 if an invalid quantity greater than stock item quantity was provided', async () => {
+                const response = await request(app).post(URL).send({
+                    ...validStoreItemCredentials,
+                    quantity: 999999999
+                }).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
+
+                expect(response.status).toBe(400);
+            });
+
             it('should return 200 if valid params was provided', async () => {
                 const response = await request(app).post(URL).send(validStoreItemCredentials).set('Authorization', `Bearer ${ADMIN_VALID_TOKEN}`);
 

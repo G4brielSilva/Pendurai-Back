@@ -68,7 +68,7 @@ export class StoreController extends BaseController {
      *         required: true
      *         schema:
      *           type: string
-     *         description: Id da loja a ser listada
+     *         description: Id da loja
      *     requestBody:
      *       required: true
      *       content:
@@ -111,7 +111,7 @@ export class StoreController extends BaseController {
      *         required: true
      *         schema:
      *           type: string
-     *         description: Id da loja a ser listada
+     *         description: Id da loja
      *     responses:
      *       200:
      *         $ref: '#/components/responses/Success200'
@@ -167,7 +167,7 @@ export class StoreController extends BaseController {
      *         required: true
      *         schema:
      *           type: string
-     *         description: Id da loja a ser listada
+     *         description: Id da loja
      *     responses:
      *       204:
      *         $ref: '#/components/responses/SuccessEmpty204'
@@ -344,16 +344,21 @@ export class StoreController extends BaseController {
     public async addOrUpdateQuantityItemToCart(req: Request, res: Response): Promise<void> {
         const { cartId, storeItemId, quantity } = req.body;
 
-        const cartEntity = (await new CartRepository().findById(cartId)) as ShopCart;
+        try {
+            const cartEntity = (await new CartRepository().findById(cartId)) as ShopCart;
 
-        const storeItemEntity = (await new StockRepository().findById(storeItemId)) as StoreItem;
+            const storeItemEntity = (await new StockRepository().findById(storeItemId)) as StoreItem;
 
-        await new CartItemRepository().addItemToCart(cartEntity, storeItemEntity, quantity);
+            await new CartItemRepository().addItemToCart(cartEntity, storeItemEntity, quantity);
 
-        const cart = await new CartRepository().findById(cartId);
-        const parsedCartItems = cart?.cartItems.map(item => ({ ...item, storeItem: { ...item.storeItem, store: undefined } }));
+            const cart = await new CartRepository().findById(cartId);
+            const parsedCartItems = cart?.cartItems.map(item => ({ ...item, storeItem: { ...item.storeItem, store: undefined } }));
 
-        return RouteResponse.success(res, { cart: { ...cart, cartItems: parsedCartItems } });
+            return RouteResponse.success(res, { cart: { ...cart, cartItems: parsedCartItems } });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            return RouteResponse.badRequest(res, err.message);
+        }
     }
 
     /**
