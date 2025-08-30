@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
+import { EnvUtils } from '../utils/EnvUtils';
 
 export const dataSource = new DataSource({
     name: 'default',
@@ -11,6 +12,7 @@ export const dataSource = new DataSource({
     database: process.env.MARIADB_DATABASE,
     entities: ['src/library/entity/*.ts'],
     migrations: ['./migrations/*.ts'],
+    migrationsRun: EnvUtils.isDevelopment(),
     logging: false,
     synchronize: true
 });

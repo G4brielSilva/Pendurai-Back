@@ -59,11 +59,11 @@ export class AuthenticationController extends BaseController {
 
     /**
      * @swagger
-     * /api/auth/login:
+     * /api/auth/refresh-token:
      *   post:
-     *     summary: Login de usuário
+     *     summary: Gera um novo par de tokens
      *     tags: [Authentication]
-     *     description: Faz o login do usuário e retorna um token
+     *     description: Gera um novo par de tokens (access e refresh) a partir do refresh token
      *     requestBody:
      *       required: true
      *       content:
@@ -117,10 +117,8 @@ export class AuthenticationController extends BaseController {
     @Middlewares(AuthenticationValidator.forgotPassword())
     public async forgotPassword(req: Request, res: Response): Promise<void> {
         const { email } = req.body;
-
-        await Email.sendForgotPasswordEmail(email);
-
         RouteResponse.successEmpty(res);
+        await Email.sendForgotPasswordEmail(email);
     }
 
     /**
