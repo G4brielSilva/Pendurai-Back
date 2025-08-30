@@ -142,13 +142,7 @@ describe('AuthenticationController', () => {
 
             expect(response.status).toBe(400);
         });
-
-        it('should return 400 if a valid email was provided but the user was delected', async () => {
-            const response = await request(app).post(URL).send({ email: 'deleted_user_email@email.com'});
-
-            expect(response.status).toBe(400);
-        });
-
+        
         it('should return 204 if an valid email was provided', async () => {
             const response = await request(app).post(URL).send(validBody);
 

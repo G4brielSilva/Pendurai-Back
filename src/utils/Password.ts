@@ -64,9 +64,6 @@ export class Password {
      */
     public static async recoveryCodeIsValid(email: string, recoveryCode: string): Promise<boolean> {
         const isValidRecoveryCode = recoveryCode === (await new Redis().getRecoveryCode(email));
-
-        if (isValidRecoveryCode) await new Redis().deleteRecoveryCode(email);
-
         return Promise.resolve(isValidRecoveryCode);
     }
 }

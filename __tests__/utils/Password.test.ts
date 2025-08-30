@@ -60,16 +60,4 @@ describe('Password', () => {
 
         expect(recoveryCodeIsValidSpy).toHaveBeenCalledWith(email, recoveryCode);
     });
-
-    it('should call recoveryCodeIsValid with correct params', async () => {
-        const recoveryCode = 'valid_recovery_code';
-        jest.spyOn(Redis.prototype, 'getRecoveryCode').mockResolvedValue(recoveryCode);
-
-        const deleteRecoveryCodeSpy = jest.spyOn(Redis.prototype, 'deleteRecoveryCode');
-        const email = 'valid_email';
-
-        await Password.recoveryCodeIsValid(email, recoveryCode);
-
-        expect(deleteRecoveryCodeSpy).toHaveBeenCalledTimes(1);
-    });
 });
