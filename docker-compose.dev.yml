@@ -1,0 +1,46 @@
+version: '3'
+services:
+    pendurai-api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        env_file:
+            - .env/pendurai_api.env
+        environment:
+            - NODE_ENV=development
+        volumes:
+            - .:/app
+        ports:
+            - "4444:8080"
+        networks:
+            - pendurai-network
+        command: npm start
+    pendurai-mariadb:
+        image: mariadb:latest
+        restart: always
+        env_file:
+            - .env/mariadb.env
+        ports:
+            - "3306:3306"
+        volumes:
+            - mariadb_data:/var/lib/mysql
+        networks:
+            - pendurai-network
+    pendurai-redis:
+        image: redis:latest
+        restart: always
+        ports:
+            - "6379:6379"
+        env_file:
+            - .env/redis.env
+        volumes:
+            - redis_data:/data
+        networks:
+            - pendurai-network
+networks:
+    pendurai-network:
+        driver: bridge
+volumes:
+    mariadb_data:
+    redis_data:

@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+.env
+.tool-versions
+db
+jest
+docs
+app.log
