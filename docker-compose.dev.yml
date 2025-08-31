@@ -38,21 +38,9 @@ services:
             - redis_data:/data
         networks:
             - pendurai-network
-    pendurai-mongodb:
-        image: mongo:latest
-        restart: always
-        ports:
-            - "27017:27017"
-        env_file:
-            - .env/mongodb.env
-        volumes:
-            - mongodb_data:/data/db
-        networks:
-            - pendurai-network
 networks:
     pendurai-network:
         driver: bridge
 volumes:
     mariadb_data:
     redis_data:
-    mongodb_data:

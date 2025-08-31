@@ -13,14 +13,6 @@ export const dataSource = new DataSource({
     entities: ['src/library/entity/*.ts'],
     migrations: ['./migrations/*.ts'],
     migrationsRun: EnvUtils.isDevelopment(),
-    logging: false,
-    synchronize: true
-});
-
-export const mongoDataSource = new DataSource({
-    type: 'mongodb',
-    host: process.env.MONGODB_HOST,
-    url: process.env.MONGODB_URL,
-    entities: ['src/library/ActionsLog/*.ts'],
+    logging: EnvUtils.isDevelopment(),
     synchronize: true
 });

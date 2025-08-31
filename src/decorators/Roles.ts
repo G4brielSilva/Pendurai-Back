@@ -11,10 +11,3 @@ export function Roles(...roles: string[]) {
         Reflect.defineMetadata('roles', roles, descriptor.value);
     };
 }
-
-export function PublicRoute() {
-    // eslint-disable-next-line func-names
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        Reflect.defineMetadata('roles', [], descriptor.value);
-    };
-}

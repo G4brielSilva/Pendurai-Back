@@ -6,13 +6,12 @@ import { EnumRoles } from '../../../common/models/enum/EnumRoles';
 import { Controller } from '../../../decorators/Controller';
 import { Get, Post, Put } from '../../../decorators/Methods';
 import { Middlewares } from '../../../decorators/Middlewares';
-import { PublicRoute } from '../../../decorators/Roles';
 import { Authentication, User } from '../../../library/entity';
 import { AuthenticationRepository, UserRepository } from '../../../library/repository';
 import { JWT } from '../../../third-party/Jwt';
-import { ActionLoger } from '../../../utils/ActionLoger';
 import { Email } from '../../../utils/Email';
 import { AuthenticationValidator } from './Authentication.validator';
+import { Log } from '../../../decorators/Log';
 
 @Controller('/auth')
 export class AuthenticationController extends BaseController {
@@ -41,7 +40,6 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/success'
      */
     @Post('/login')
-    @PublicRoute()
     @Middlewares(AuthenticationValidator.login())
     public async login(req: Request, res: Response): Promise<void> {
         const { authentication } = req.body;
@@ -79,7 +77,6 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/success'
      */
     @Post('/refresh-token')
-    @PublicRoute()
     @Middlewares(AuthenticationValidator.refreshToken())
     public async refreshToken(req: Request, res: Response): Promise<void> {
         const { refreshToken } = req.body;
@@ -113,7 +110,7 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/successEmpty'
      */
     @Post('/forgot-password')
-    @PublicRoute()
+    @Log()
     @Middlewares(AuthenticationValidator.forgotPassword())
     public async forgotPassword(req: Request, res: Response): Promise<void> {
         const { email } = req.body;
@@ -140,7 +137,6 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/successEmpty'
      */
     @Get('/verify-recovery-code/:recoveryCode')
-    @PublicRoute()
     @Middlewares(AuthenticationValidator.verifyRecoveryCode())
     public async verifyCode(req: Request, res: Response): Promise<void> {
         RouteResponse.successEmpty(res);
@@ -174,8 +170,8 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/success'
      */
     @Put('/change-password')
-    @PublicRoute()
-    @Middlewares(AuthenticationValidator.changePassword(), ActionLoger.logByRequest)
+    @Log()
+    @Middlewares(AuthenticationValidator.changePassword())
     public async changePassword(req: Request, res: Response): Promise<void> {
         const { newPassword, authentication } = req.body;
 
@@ -215,7 +211,6 @@ export class AuthenticationController extends BaseController {
      *         $ref: '#/components/responses/success'
      */
     @Post('/register')
-    @PublicRoute()
     @Middlewares(AuthenticationValidator.register())
     public async register(req: Request, res: Response): Promise<void> {
         const { email, password, name } = req.body;

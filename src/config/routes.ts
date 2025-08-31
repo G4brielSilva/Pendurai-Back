@@ -4,6 +4,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { RouteResponse } from '../common/models/RouteResponse';
 import { JWT } from '../third-party/Jwt';
+import { ActionLoger } from '../utils/ActionLoger';
 
 export class RoutesSetup {
     public static getEndpointsFromControllers(constructor: Function): Router {
@@ -15,13 +16,17 @@ export class RoutesSetup {
             if (key !== 'constructor' && typeof property === 'function') {
                 const middlewares = Reflect.getMetadata('middlewares', property) || [];
 
-                const roles = Reflect.getMetadata('roles', property);
+                const roles = Reflect.getMetadata('roles', property) || [];
                 const rolesMiddleware = RoutesSetup.getRolesMiddlewares(roles);
+                if (rolesMiddleware) middlewares.unshift(rolesMiddleware);
 
                 const path = Reflect.getMetadata('path', property);
                 const method: string = Reflect.getMetadata('method', property);
 
-                (router[method as keyof Router] as Function)(constructor.prototype.baseRoute + path, rolesMiddleware, ...middlewares, property);
+                const log = Reflect.getMetadata('log', property);
+                if (log) middlewares.unshift(ActionLoger.logByRequest);
+
+                (router[method as keyof Router] as Function)(constructor.prototype.baseRoute + path, ...middlewares, property);
             }
         }
 
