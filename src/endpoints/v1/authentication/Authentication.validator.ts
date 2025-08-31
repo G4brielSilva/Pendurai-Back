@@ -17,13 +17,12 @@ export class AuthenticationValidator extends BaseValidator {
 
                     req.body.authentication = authentication;
                     return Promise.resolve();
-                },
-                errorMessage: 'Email is not registered'
+                }
             },
             errorMessage: 'Credentials are invalid'
         },
         password: {
-            in: ['body', 'params'],
+            in: ['body'],
             isString: true,
             isLength: {
                 options: { min: 8, max: 32 },
@@ -46,7 +45,7 @@ export class AuthenticationValidator extends BaseValidator {
             errorMessage: 'Credentials are invalid'
         },
         recoveryCode: {
-            in: 'body',
+            in: ['body', 'params'],
             isString: true,
             isLength: { options: { min: 6, max: 6 } },
             custom: {
@@ -90,10 +89,10 @@ export class AuthenticationValidator extends BaseValidator {
      * @return { Array<RequestHandler> }
      */
     public static forgotPassword(): Array<RequestHandler> {
-        const { email } = AuthenticationValidator.model;
+        const { email: emailValidator } = AuthenticationValidator.model;
 
         // remove custom validator to not check if email exists in database
-        Object.assign(email, { custom: undefined });
+        const email = { ...emailValidator, custom: undefined };
 
         return AuthenticationValidator.validationList({ email });
     }
@@ -103,7 +102,6 @@ export class AuthenticationValidator extends BaseValidator {
      * @return { Array<RequestHandler> }
      */
     public static verifyRecoveryCode(): Array<RequestHandler> {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { recoveryCode } = AuthenticationValidator.model;
         return AuthenticationValidator.validationList({ recoveryCode });
     }
