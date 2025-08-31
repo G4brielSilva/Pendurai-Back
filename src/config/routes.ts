@@ -4,7 +4,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { RouteResponse } from '../common/models/RouteResponse';
 import { JWT } from '../third-party/Jwt';
-import { ActionLoger } from '../utils/ActionLoger';
+import { Logger } from '../middlewares/Logger';
 
 export class RoutesSetup {
     public static getEndpointsFromControllers(constructor: Function): Router {
@@ -24,7 +24,7 @@ export class RoutesSetup {
                 const method: string = Reflect.getMetadata('method', property);
 
                 const log = Reflect.getMetadata('log', property);
-                if (log) middlewares.unshift(ActionLoger.logByRequest);
+                if (log) middlewares.unshift(Logger.logByRequest);
 
                 (router[method as keyof Router] as Function)(constructor.prototype.baseRoute + path, ...middlewares, property);
             }

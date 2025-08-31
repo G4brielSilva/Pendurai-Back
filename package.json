@@ -7,7 +7,7 @@
         "test": "jest --verbose --coverage",
         "test:watch": "jest --verbose --coverage --watch",
         "build": "npm run api_test && tsc --build",
-        "api_test": "npm run lint && npm run test -o",
+        "api_test": "npm run lint && IS_TEST=true npm run test -o",
         "lint": "eslint ./src/ --ext .ts",
         "lint:fix": "eslint ./src/ --ext .ts --fix",
         "build:docs": "npm run build && npm run docs",

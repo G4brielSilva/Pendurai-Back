@@ -1,5 +1,4 @@
 import { Hash } from '../../src/third-party/Hash';
-import { Redis } from '../../src/third-party/Redis';
 import { Password } from '../../src/utils/Password';
 
 // Third-Party mock

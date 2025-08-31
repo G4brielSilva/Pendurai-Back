@@ -77,7 +77,7 @@ export class AuthenticationValidator extends BaseValidator {
         return AuthenticationValidator.validationList({
             refreshToken: {
                 in: 'body',
-                isString: true,
+                isJWT: true,
                 notEmpty: true,
                 errorMessage: 'refreshToken is required'
             }

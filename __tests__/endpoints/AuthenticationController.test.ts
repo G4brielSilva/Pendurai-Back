@@ -26,12 +26,6 @@ jest.mock('../../src/utils/Password', () => {
     return jest.requireActual('../../__mocks__/utils/Password');
 });
 
-jest.mock('../../src/utils/ActionLoger', () => {
-    return jest.requireActual('../../__mocks__/utils/ActionLoger');
-});
-
-
-
 const app = new App({
     path: '/api',
     port: process.env.API_PORT as unknown as number,
@@ -98,38 +92,28 @@ describe('AuthenticationController', () => {
         });
     });
 
-    // describe('POST - refresh-token', () => {
-    //     const URL = '/api/auth/refresh-token';
-    //     const validBody = {
-    //         refreshToken: 'valid_refresh_token'
-    //     };
+    describe('POST - refresh-token', () => {
+        const URL = '/api/auth/refresh-token';
+        const validBody = {
+            refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZmJiMTgwYS02NDJlLTQ4N2QtYTM3Ni04MTJkYjI5NzZiY2IiLCJhdXRoSWQiOiJhYWZjODU3ZC01MjVmLTRiNmEtYjFjYy1jOTAyOTVkMDVjODgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc1NjY1NzIzNywiZXhwIjoxNzU2Njg2MDM3fQ.eZRPkC46VGwP48igRdCBj1MaWJmMQKOlxWDLVoVrUbs'
+        };
 
-    //     it('should return 400 if no refreshToken was provided', async () => {
-    //         const response = await request(app).post(URL).send({});
+        it('should return 400 if no refreshToken was provided', async () => {
+            const response = await request(app).post(URL).send({});
+            expect(response.status).toBe(400);
+        });
 
-    //         expect(response.status).toBe(400);
-    //     });
+        it('should return 400 if an invalid refreshToken was provided', async () => {
+            const response = await request(app).post(URL).send({ refreshToken: 'invalid_refresh_token'});
+            expect(response.status).toBe(400);
+        });
 
-    //     it('should return 400 if an invalid refreshToken was provided', async () => {
-    //         jest.spyOn(JWT, 'decodeToken').mockRejectedValueOnce(new Error('invalid token'));
+        it('should return 200 if a valid refreshToken was provided', async () => {
+            const response = await request(app).post(URL).send(validBody);
 
-    //         const response = await request(app).post(URL).send({ refreshToken: 'invalid_refresh_token'});
-
-    //         expect(response.status).toBe(400);
-    //     });
-
-    //     it('should return 200 if a valid refreshToken was provided', async () => {
-    //         jest.spyOn(JWT, 'decodeToken').mockResolvedValueOnce({
-    //             authId: 'valid_auth_id',
-    //             userId: 'valid_user_id',
-    //             admin: false
-    //         } as unknown as TObject);
-
-    //         const response = await request(app).post(URL).send(validBody);
-
-    //         expect(response.status).toBe(200);
-    //     });
-    // });
+            expect(response.status).toBe(200);
+        });
+    });
 
     describe('POST - forgot-password', () => {
         const URL = '/api/auth/forgot-password';

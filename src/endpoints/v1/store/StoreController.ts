@@ -8,8 +8,8 @@ import { Middlewares } from '../../../decorators/Middlewares';
 import { Roles } from '../../../decorators/Roles';
 import { CartItem, ShopCart, Store, StoreItem } from '../../../library/entity';
 import { CartItemRepository, CartRepository, StockRepository, StoreRepository } from '../../../library/repository';
-import { ActionLoger } from '../../../utils/ActionLoger';
 import { StoreValidator } from './Store.validator';
+import { Log } from '../../../decorators/Log';
 
 @Controller('/stores')
 export class StoreController extends BaseController {
@@ -88,7 +88,8 @@ export class StoreController extends BaseController {
      */
     @Put('/:storeId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.storeData(), ActionLoger.logByRequest)
+    @Log()
+    @Middlewares(StoreValidator.onlyId, StoreValidator.storeData())
     public async updateStore(req: Request, res: Response): Promise<void> {
         const { storeId, cnpj, name } = req.body;
 
@@ -174,7 +175,8 @@ export class StoreController extends BaseController {
      */
     @Delete('/:storeId')
     @Roles(EnumRoles.ADMIN)
-    @Middlewares(StoreValidator.onlyId, ActionLoger.logByRequest)
+    @Log()
+    @Middlewares(StoreValidator.onlyId)
     public async softDeleteStore(req: Request, res: Response): Promise<void> {
         const { storeId } = req.body;
 
@@ -292,7 +294,8 @@ export class StoreController extends BaseController {
      */
     @Put('/:storeId/stock/:storeItemId')
     @Roles(EnumRoles.ADMIN, EnumRoles.USER)
-    @Middlewares(StoreValidator.onlyId, StoreValidator.storeItemId, StoreValidator.storeItemData(), ActionLoger.logByRequest)
+    @Log()
+    @Middlewares(StoreValidator.onlyId, StoreValidator.storeItemId, StoreValidator.storeItemData())
     public async updateStoreItem(req: Request, res: Response): Promise<void> {
         const { storeId, storeItemId: id, quantity, value } = req.body;
 
